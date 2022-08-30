@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.mainnav {
+    background-color: #2d3748;
+    color: white;
+}
+
+.background {
+    background-color: #6b7280;
+}

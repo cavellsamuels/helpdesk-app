@@ -4,25 +4,37 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SearchRequest;
 use App\Http\Requests\StoreTicketRequest;
-use App\Http\Requests\UpdateFileRequest;
 use App\Http\Requests\UpdateTicketRequest;
 use App\Models\Comment;
 use App\Models\File;
-use App\Models\LinkedTicket;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Notifications\UpdatedTicketNotification;
 use Exception;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\QueryException;
+use Illuminate\Database\Schema\ForeignIdColumnDefinition;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
+use Nette\Utils\Arrays;
 
 class TicketController extends Controller
 {
+    protected $urgencies;
+    protected $categories;
+    protected $itSupportUsers;
+
+    public function __construct()
+    {
+        $this->urgencies = Ticket::$urgencies;
+        $this->categories = Ticket::$categories;
+        $this->itSupportUsers = User::all()->where('role_id', 2);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -30,9 +42,9 @@ class TicketController extends Controller
      */
     public function create(): View
     {
-        $users = User::all()->where('role_id', 2);
-        $urgencies = Ticket::$urgencies;
-        $categories = Ticket::$categories;
+        $users = $this->itSupportUsers;
+        $urgencies = $this->urgencies;
+        $categories = $this->categories;
 
         return view('tickets.create', compact('users', 'urgencies', 'categories'));
     }
@@ -43,30 +55,16 @@ class TicketController extends Controller
      * @param  \App\Http\Requests\StoreTicketRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreTicketRequest $request, Ticket $ticket): RedirectResponse
+    public function store(StoreTicketRequest $request, Ticket $ticket, FileController $fileController): RedirectResponse
     {
         try {
             $ticket = Ticket::query()->create($request->only(['title', 'details', 'urgency', 'category', 'open', 'logged_by', 'assigned_to']));
-            $file = $request->hasfile('file');
-
-            if ($file) {
-                File::query()->create([
-                    'name' => $request->file('file')->getClientOriginalName(),
-                    'path' => $request->file('file')->store('public/files'),
-                    'file_size' => $request->file('file')->getSize(),
-                    'ticket_id' => $ticket->id,
-                ]);
-            } else {
-                $file = null;
-            }
+            $fileController->store($ticket, $request);
         } catch (QueryException $error) {
             return back()->with('error', 'Ticket Unsuccessfully Added');
         }
-        if (Auth::check()) {
-            return redirect()->route('show.global.dashboard')->with('success', 'Ticket Added Successfully');
-        } else {
-            return redirect()->route('show.index')->with('success', 'Ticket Added Successfully');
-        }
+
+        return redirect()->route('show.global.dashboard')->with('success', 'Ticket Added Successfully');
     }
 
     /**
@@ -77,10 +75,10 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket, File $file): View
     {
-        $urgencies = Ticket::$urgencies;
-        $categories = Ticket::$categories;
+        $users = $this->itSupportUsers;
+        $urgencies = $this->urgencies;
+        $categories = $this->categories;
         $comments = Comment::where('ticket_id', $ticket->id)->get();
-        $users = User::all()->where('role_id', 2);
 
         return view('tickets.show', compact('ticket', 'file', 'urgencies', 'categories', 'comments', 'users'));
     }
@@ -93,9 +91,9 @@ class TicketController extends Controller
      */
     public function edit(Ticket $ticket): View
     {
-        $urgencies = Ticket::$urgencies;
-        $categories = Ticket::$categories;
-        $users = User::all()->where('role_id', 2);
+        $users = $this->itSupportUsers;
+        $urgencies = $this->urgencies;
+        $categories = $this->categories;
 
         return view('tickets.edit', compact('ticket', 'users', 'urgencies', 'categories'));
     }
@@ -107,35 +105,14 @@ class TicketController extends Controller
      * @param  \App\Models\Ticket  $ticket
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTicketRequest $request, Ticket $ticket, User $user): RedirectResponse
+    public function update(UpdateTicketRequest $request, Ticket $ticket, File $file, FileController $fileController): RedirectResponse
     {
-        $ticketFile = $ticket->file;
-        $users = User::all()->where('role_id', 2);
+        $users = $this->itSupportUsers;
         try {
-            if (Auth::check()) {
-                $ticket->update($request->only(['title', 'details', 'urgency', 'category', 'open', 'assigned_to']) + (['reporting_email' => now()]));
+            $ticket->update($request->only(['title', 'details', 'urgency', 'category', 'open', 'assigned_to']) + (['reporting_email' => now()]));
 
-                if ($request->hasfile('file')) {
-                    if ($ticketFile) {
-                        Storage::delete($ticketFile);
-                        $ticketFile->update([
-                            'name' => $request->file('file')->getClientOriginalName(),
-                            'path' => $request->file('file')->store('public/files'),
-                            'file_size' => $request->file('file')->getSize(),
-                        ]);
-                    } else {
-                        File::query()->create([
-                            'name' => $request->file('file')->getClientOriginalName(),
-                            'path' => $request->file('file')->store('public/files'),
-                            'file_size' => $request->file('file')->getSize(),
-                            'ticket_id' => $ticket->id,
-                        ]);
-                    }
-                }
-            } else {
-                $ticket->update($request->only(['open']));
-
-                return redirect()->route('show.index')->with('success', 'Ticket Updated Successfully');
+            if ($file == true) {
+                $fileController->update($ticket, $request);
             }
         } catch (QueryException $error) {
             return back()->with('error', 'Couldn\'t Update Ticket');
@@ -155,8 +132,8 @@ class TicketController extends Controller
     {
         try {
             $ticket->delete();
-            if (file_exists($ticket->file)) {
-                Storage::delete($ticket->file);
+            if ($ticket->file) {
+                Storage::delete($ticket->file->path); //Not Working
             }
         } catch (QueryException $error) {
             return back()->with('error', 'Ticket Not Deleted');
@@ -167,8 +144,8 @@ class TicketController extends Controller
 
     public function search(SearchRequest $request)
     {
-        $urgencies = Ticket::$urgencies;
-        $categories = Ticket::$categories;
+        $urgencies = $this->urgencies;
+        $categories = $this->categories;
         $search = $request->get('search');
         $ticketsId = Ticket::all()->where('id', $search);
         $ticketsTitle = Ticket::all()->where('title', $search);
@@ -180,62 +157,47 @@ class TicketController extends Controller
         }
     }
 
-    public function linktickets(Request $request): View
+    public function linktickets(Request $request)
     {
-        $urgencies = Ticket::$urgencies;
-        $categories = Ticket::$categories;
-        $tickets = Ticket::find($request->linkedtickets); //Getting the Models Passed Selected By the Checkbox
-        $users = User::all()->where('role_id', 2);
+        $users = $this->itSupportUsers;
+        $tickets = Ticket::find($request->linkedtickets);
+        $urgencies = $this->urgencies;
+        $categories = $this->categories;
 
-        $ticketIds = $tickets->pluck('id'); // Getting only the IDs of the Models
-
-        try {
-            foreach ($ticketIds as $ticketId) {
-                if ($request->has('linkedtickets')) {
-                    LinkedTicket::create([
-                        'ticket_id' => $ticketId,
-                        // 'linked_ticket_id' =>
-                    ]);
-                    // if (!$request->has('linkedticket')) {
-                    //     $linkedTicket->delete();
-                    // }
-                }
+        if ($tickets == true) {
+            if ($request->has('viewtickets')) {
+                redirect()->route('show.linked');
+            } elseif ($request->has('edittickets')) {
+                redirect()->route('edit.linked')->compact('tickets',);
             }
-        } catch (QueryException $error) {
-            return back()->with('Failed To Insert Data');
-        }
-
-        if ($request->has('viewtickets')) {
-            if ($ticketIds) {
-                return view('tickets.linked', compact('tickets', 'urgencies', 'categories'));
-            } else {
-                return back()->with('error', 'You Must Select At Least One Ticket');
-            }
-        } elseif ($request->has('edittickets')) {
-            return view('tickets.edit-linked', compact('tickets', 'urgencies', 'users', 'categories'));
-            dd($tickets);
+        } else {
+            return back()->with('error', 'You Must Select At Least One Ticket');
         }
     }
 
-    public function updatelinked(Request $request, string $tickets): RedirectResponse // NOT FULLY IMPLEMENTED
+    public function showLinked()
     {
+        return view('tickets.linked', compact('tickets', 'urgencies', 'categories'));
+    }
+
+    public function showEditLinked()
+    {
+        return view('tickets.edit-linked', compact('users', 'tickets', 'urgencies', 'categories'));
+    }
+
+    public function updatelinked(Request $request, FileController $fileController, $tickets): RedirectResponse // NOT FULLY IMPLEMENTED
+    {
+        $users = $this->itSupportUsers;
+        $tId = explode(',', $tickets);
+        dd($tId);
         $ticketIds = Ticket::all()->where('id', $tickets);
-        dd($ticketIds);
+
         foreach ($ticketIds as $ticket) {
             try {
-                $users = User::all()->where('role_id', 2);
                 $ticket->update($request->only(['title', 'details', 'assigned_to', 'logged_by', 'urgency', 'category', 'open']));
+                $fileController->update($ticket, $request);
 
-                if ($request->hasfile('file')) {
-                    Storage::delete($ticket->file);
-                    $ticket->file->update([
-                        'name' => $request->file('file')->getClientOriginalName(),
-                        'path' => $request->file('file')->store('public/files'),
-                        'file_size' => $request->file('file')->getSize(),
-                    ]);
-                }
-
-                Notification::send($users, new UpdatedTicketNotification($ticket), compact('ticket'));
+                Notification::send($users, new UpdatedTicketNotification($ticket), compact('ticket')); //Not Working
             } catch (Exception $error) {
                 return back()->with('error', 'Failed To Update Tickets');
             }

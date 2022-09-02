@@ -43,8 +43,7 @@ class UpdatedTicketNotification extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->line('Hi, ' . $notifiable->name)
-            ->action('Notification Action', url('/'))
+            ->line('Hi, '.$notifiable->name)
             // ->line("Ticket #{{$ticket->id}} . has been updated.")
             ->line('Email: ', $this->user->email);
     }

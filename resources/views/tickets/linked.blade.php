@@ -30,70 +30,71 @@
                         <th> Assigned To </th>
                         <th> Actions</th>
                     </tr>
-
-                    @foreach ($tickets as $ticket)
-                        <tr>
-                            <div>
-                                <td>{{ $ticket->id }}</td>
-                                <td>{{ $ticket->title }}</td>
-                                <td>
-                                    @foreach ($urgencies as $key => $value)
-                                        @if ($key == $ticket->urgency)
-                                            {{ $value }}
+                    @if ($tickets == true)
+                        @foreach ($tickets as $ticket)
+                            <tr>
+                                <div>
+                                    <td>{{ $ticket->id }}</td>
+                                    <td>{{ $ticket->title }}</td>
+                                    <td>
+                                        @foreach ($urgencies as $key => $value)
+                                            @if ($key == $ticket->urgency)
+                                                {{ $value }}
+                                            @endif
+                                        @endforeach
+                                    </td>
+                                    <td>
+                                        @foreach ($categories as $key => $value)
+                                            @if ($key == $ticket->category)
+                                                {{ $value }}
+                                            @endif
+                                        @endforeach
+                                    </td>
+                                    <td>
+                                        @if ($ticket->open == true)
+                                            <div> &#x2705; Open </div>
                                         @endif
-                                    @endforeach
-                                </td>
-                                <td>
-                                    @foreach ($categories as $key => $value)
-                                        @if ($key == $ticket->category)
-                                            {{ $value }}
+
+                                        @if ($ticket->open == false)
+                                            <div> &#x274C; Closed </div>
                                         @endif
-                                    @endforeach
-                                </td>
-                                <td>
-                                    @if ($ticket->open == true)
-                                        <div> &#x2705; Open </div>
-                                    @endif
+                                    </td>
+                                    <td>
+                                        @if ($ticket->file)
+                                            {{ $ticket->file->name }}
+                                        @endif
+                                    </td>
+                                    <td>{{ $ticket->created_at->format('d.m.Y') }}</td>
+                                    <td>{{ $ticket->logged_by }}</td>
+                                    <td>
+                                        @if ($ticket->user)
+                                            {{ ucwords($ticket->user->first_name) }}
+                                            {{ ucwords($ticket->user->last_name) }}
+                                        @endif
+                                    </td>
+                                    <td class="th-functions">
+                                        <form class="" action="{{ route('delete.ticket', [$ticket->id]) }}"
+                                            method="POST">
 
-                                    @if ($ticket->open == false)
-                                        <div> &#x274C; Closed </div>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if ($ticket->file)
-                                        {{ $ticket->file->name }}
-                                    @endif
-                                </td>
-                                <td>{{ $ticket->created_at->format('d.m.Y') }}</td>
-                                <td>{{ $ticket->logged_by }}</td>
-                                <td>
-                                    @if ($ticket->user)
-                                        {{ ucwords($ticket->user->first_name) }}
-                                        {{ ucwords($ticket->user->last_name) }}
-                                    @endif
-                                </td>
-                                <td class="th-functions">
-                                    <form class="" action="{{ route('delete.ticket', [$ticket->id]) }}"
-                                        method="POST">
+                                            <a href="{{ route('show.ticket', $ticket->id) }}" title="Ticket Details"
+                                                class="ticket-details-button mb-1 p-1 bg-blue-900 rounded-md fa fa-info-circle"></a>
 
-                                        <a href="{{ route('show.ticket', $ticket->id) }}" title="Ticket Details"
-                                            class="ticket-details-button mb-1 p-1 bg-blue-900 rounded-md fa fa-info-circle"></a>
+                                            <a href="{{ route('edit.ticket', $ticket->id) }}" title="Edit Ticket"
+                                                class="edit-ticket-button mb-1 p-1 bg-green-900 rounded-md text-xl fa fa-pencil">
+                                            </a>
 
-                                        <a href="{{ route('edit.ticket', $ticket->id) }}" title="Edit Ticket"
-                                            class="edit-ticket-button mb-1 p-1 bg-green-900 rounded-md text-xl fa fa-pencil">
-                                        </a>
+                                            @csrf
+                                            @method('DELETE')
 
-                                        @csrf
-                                        @method('DELETE')
-
-                                        <button title="Delete Ticket"
-                                            class="delete-ticket-button bg-red-900 rounded-md p-1 fa fa-trash-o"
-                                            type="submit">
-                                        </button>
-                                    </form>
-                                </td>
-                        </tr>
-                    @endforeach
+                                            <button title="Delete Ticket"
+                                                class="delete-ticket-button bg-red-900 rounded-md p-1 fa fa-trash-o"
+                                                type="submit">
+                                            </button>
+                                        </form>
+                                    </td>
+                            </tr>
+                        @endforeach
+                    @endif
                 </table>
 
                 @method('GET')

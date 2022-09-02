@@ -2,7 +2,8 @@
     <div class="mt-2">
         <x-auth-card>
             <title> Create Ticket </title>
-            <form method="POST" action="{{ route('store.ticket') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('store.ticket') }}"
+                enctype="multipart/form-data">
                 @csrf
 
                 <h2 class="text-white font-bold text-3xl pb-3 pt-2 underline"> Create Ticket </h2>
@@ -17,7 +18,8 @@
                         <select name="assigned_to" id="assigned_to" class="block mt-1 w-full rounded-xl" name="assigned_to">s
                             <option disabled selected value> -- Select An Option -- </option>
                             @foreach ($users as $user)
-                                <option value="{{ $user->id }}"> {{ ucwords($user->first_name . ' ' . $user->last_name) }} </option>
+                                <option value="{{ $user->id }}">
+                                    {{ ucwords($user->first_name . ' ' . $user->last_name) }} </option>
                             @endforeach
                         </select>
                     </div>
@@ -27,26 +29,24 @@
                 <div class="mt-3">
                     <x-label for="title" :value="__('Title')" />
 
-                    <x-input id="title" class="block mt-1 w-full" type="text" name="title" :value="old('title')" placeholder="Enter Ticket Title"
-                        required autofocus />
+                    <x-input id="title" class="block mt-1 w-full" type="text" name="title" :value="old('title')"
+                        placeholder="Enter Ticket Title" required autofocus />
                 </div>
 
                 <!-- Details -->
                 <div class="mt-3">
                     <x-label for="details" :value="__('Details')" />
 
-                    {{-- <x-input id="details" class="block mt-1 w-full" type="text" name="details" :value="old('details')"
-                        required autofocus /> --}}
-
-                        <textarea name="details" id="" cols="30" class="block mt-1 min-h-full max-h-32 w-full rounded-xl" rows="10" placeholder="Enter Ticket Details"></textarea>
+                    <textarea name="details" id="" cols="30" class="block mt-1 min-h-full max-h-32 w-full rounded-xl"
+                        rows="10" placeholder="Enter Ticket Details"></textarea>
                 </div>
 
                 <!-- Logged By -->
                 <div class="mt-3">
                     <x-label for="loggedby" :value="__('Logged By')" />
 
-                    <x-input id="loggedby" class="block mt-1 w-full" type="text" name="logged_by" :value="old('loggedby')" placeholder="Enter Full Name"
-                        required autofocus />
+                    <x-input id="loggedby" class="block mt-1 w-full" type="text" name="logged_by" :value="old('loggedby')"
+                        placeholder="Enter Full Name" required autofocus />
                 </div>
 
                 <!-- Urgency Level -->

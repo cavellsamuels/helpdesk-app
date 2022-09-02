@@ -177,7 +177,7 @@
                 {{-- <x-button title="Show Tickets" class="mt-2" name="viewtickets" type="submit"> View </x-button>
 
                 <x-button title="Edit Tickets" name="edittickets" type="submit" class="mt-2"
-                    action="{{ route('edit.tickets', [$tickets->pluck('id')]) }}"> Edit </x-button1>
+                    action="{{ route('edit.linked', [$tickets->pluck('id')]) }}"> Edit </x-button1>
                     </formx> --}}
         </div>
     </body>

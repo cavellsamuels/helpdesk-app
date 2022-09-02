@@ -30,7 +30,7 @@ class StoreTicketRequest extends FormRequest
             'urgency' => 'required',
             'category' => 'required',
             // 'open' => 'required',
-            'file' => 'max:10000'
+            'file' => 'max:10000',
         ];
     }
 }

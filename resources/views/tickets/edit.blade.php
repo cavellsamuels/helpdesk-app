@@ -9,8 +9,8 @@
             <h2 class="text-white font-bold text-4xl pb-4 pt-2 underline"> Edit Ticket #{{ $ticket->id }} </h2>
 
             <x-auth-validation-errors class="" :errors="$errors" />
-
-            <form method="POST" action="{{ route('update.ticket', [$ticket->id]) }}" enctype="multipart/form-data">
+            {{-- {{ dd($ticket->file); }} --}}
+            <form method="POST" action="{{ route('update.ticket', [$ticket->id, $ticket->file]) }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 @auth
@@ -73,69 +73,69 @@
                 @endauth
 
                 <!-- Open -->
-                <div class="mt-4">
-                    <x-label for="open" :value="__('Status')" />
+                    <div class="mt-4">
+                        <x-label for="open" :value="__('Status')" />
 
-                    <select name="open" id="open" class="block mt-1 w-full rounded-xl"
-                        value="{{ ucwords($ticket->open) }}">
-                        <option selected hidden value="{{ $ticket->open }}">
-                            @if ($ticket->open == true)
+                        <select name="open" id="open" class="block mt-1 w-full rounded-xl"
+                            value="{{ ucwords($ticket->open) }}">
+                            <option selected hidden value="{{ $ticket->open }}">
+                                @if ($ticket->open == true)
+                                    <div> &#x2705; Open </div>
+                                @endif
+
+                                @if ($ticket->open == false)
+                                    <div> &#x274C; Closed </div>
+                                @endif
+                            </option>
+                            <option value="{{ App\Models\Ticket::OPEN }}">
                                 <div> &#x2705; Open </div>
-                            @endif
-
-                            @if ($ticket->open == false)
+                            </option>
+                            <option value="{{ App\Models\Ticket::CLOSED }}">
                                 <div> &#x274C; Closed </div>
-                            @endif
-                        </option>
-                        <option value="{{ App\Models\Ticket::OPEN }}">
-                            <div> &#x2705; Open </div>
-                        </option>
-                        <option value="{{ App\Models\Ticket::CLOSED }}">
-                            <div> &#x274C; Closed </div>
-                        </option>
-                    </select>
-                </div>
+                            </option>
+                        </select>
+                    </div>
 
-                @auth
-                <!-- File -->
-                <div class="mt-4">
-                    <x-label for="file" :value="__('File (Optional)')" />
+                        @auth
+                            <!-- File -->
+                            <div class="mt-4">
+                                <x-label for="file" :value="__('File (Optional)')" />
 
-                    @if ($ticket->file)
-                        <x-input type="text" class="block mt-1 w-full" name="" placeholder="Name"
-                            value="{{ ucwords($ticket->file->name) }}" readonly />
-                    @endif
-                    <input type="file" id="file" class="mt-6 w-full" name="file" />
-                </div>
+                                @if ($ticket->file)
+                                    <x-input type="text" class="block mt-1 w-full" name="" placeholder="Name"
+                                        value="{{ ucwords($ticket->file->name) }}" readonly />
+                                @endif
+                                <input type="file" id="file" class="mt-6 w-full" name="file" />
+                            </div>
 
-                <!-- Assigned To -->
-                <div class="mt-4">
-                    <x-label for="assignedTo" :value="__('Assigned To')" />
+                            <!-- Assigned To -->
+                            <div class="mt-4">
+                                <x-label for="assignedTo" :value="__('Assigned To')" />
 
-                    <select name="assigned_to" value="" id="assigned_to" class="block mt-1 w-full rounded-xl"
-                        name="assigned_to">
-                        @if ($ticket->user)
-                            <option Selected hidden value="{{ $ticket->assigned_to }}"
-                                {{ $user = App\Models\User::find($ticket->assigned_to) }}>
-                                {{ ucwords($user->value('first_name') . ' ' . $user->value('last_name')) }}</option>
-                            <option value="" name="unassigned"> Unassign </option>
-                        @else
-                            <option selected hidden value="">-- Select a User --</option>
-                        @endif
-                        @foreach ($users as $user)
-                            <option value="{{ $user->id }}">
-                                {{ ucwords($user->first_name . ' ' . $user->last_name) }} </option>
-                        @endforeach
-                    </select>
-                </div>
-                @endauth
+                                <select name="assigned_to" value="" id="assigned_to" class="block mt-1 w-full rounded-xl"
+                                    name="assigned_to">
+                                    @if ($ticket->user)
+                                        <option Selected hidden value="{{ $ticket->assigned_to }}"
+                                            {{ $user = App\Models\User::find($ticket->assigned_to) }}>
+                                            {{ ucwords($user->value('first_name') . ' ' . $user->value('last_name')) }}</option>
+                                        <option value="" name="unassigned"> Unassign </option>
+                                    @else
+                                        <option selected hidden value="">-- Select a User --</option>
+                                    @endif
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}">
+                                            {{ ucwords($user->first_name . ' ' . $user->last_name) }} </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endauth
 
-                <div class="flex items-center justify-end mt-4">
-                    <x-button class="ml-4">
-                        {{ __('Update') }}
-                    </x-button>
-                </div>
-            </form>
-        </x-auth-card>
-    </div>
-</x-guest-layout>
+                        <div class="flex items-center justify-end mt-4">
+                            <x-button class="ml-4">
+                                {{ __('Update') }}
+                            </x-button>
+                        </div>
+                    </form>
+                </x-auth-card>
+            </div>
+        </x-guest-layout>

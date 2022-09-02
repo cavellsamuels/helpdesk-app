@@ -34,7 +34,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->route('show.index', compact('tickets'));
+        return redirect()->route('show.global.dashboard', compact('tickets'));
 
         $currentUserId = Auth::user()->role_id;
 
@@ -59,6 +59,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect()->route('show.index');
+        return redirect()->route('show.global.dashboard');
     }
 }

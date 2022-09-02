@@ -16,15 +16,18 @@
             <h1 class="font-medium leading-tight text-4xl mt-0 mb-6 text-white font-black underline font-sans"> All
                 Tickets </h1>
             <x-auth-validation-errors class="" :errors="$errors" />
+
             <form action="{{ route('search.ticket') }}" method="POST" role="search">
                 @csrf
                 <div class="input-group mb-4">
-                    <input type="text" class="form-control rounded-lg" name="search" placeholder="Search...">
-                    <span class="input-group-btn">
-                        <button type="submit" class="p-1 text-lg bg-gray-900 rounded-md">
-                            <span class="text-md"> &#128269; </span>
-                        </button>
-                    </span>
+                    @auth
+                        <input type="text" class="form-control rounded-lg" name="search" placeholder="Search...">
+                        <span class="input-group-btn">
+                            <button type="submit" class="p-1 text-lg bg-gray-900 rounded-md">
+                                <span class="text-md"> &#128269; </span>
+                            </button>
+                        </span>
+                    @endauth
                     <a href="{{ route('create.ticket') }}" class="ml-1 p-2 rounded-md text-md text-white bg-green-900">
                         &plus;
                         Create a Ticket</a>
@@ -36,7 +39,9 @@
 
                 <table class="w-full border border-black border-collapse">
                     <tr>
-                        <th></th>
+                        @auth
+                            <th></th>
+                        @endauth
                         <th> Ticket # </th>
                         <th> Title </th>
                         <th> Urgency </th>
@@ -45,16 +50,20 @@
                         <th> File </th>
                         <th> Created At </th>
                         <th> Logged By </th>
-                        <th> Assigned To </th>
-                        <th> Actions</th>
+                        @auth
+                            <th> Assigned To </th>
+                        @endauth
+                        <th> Actions </th>
                     </tr>
 
                     @foreach ($tickets as $ticket)
                         <tr>
-                            <td>
-                                <x-input type="checkbox" id="linkedtickets" name="linkedtickets[]"
-                                    value="{{ $ticket->id }} 'active' => 'true'"></x-input>
-                            </td>
+                            @auth
+                                <td>
+                                    <x-input type="checkbox" id="linkedtickets" name="linkedtickets[]"
+                                        value="{{ $ticket->id }} 'active' => 'true'"></x-input>
+                                </td>
+                            @endauth
                             <div>
                                 <td>{{ $ticket->id }}</td>
                                 <td>{{ $ticket->title }}</td>
@@ -88,30 +97,36 @@
                                 </td>
                                 <td>{{ $ticket->created_at->format('d/m/Y') }}</td>
                                 <td>{{ $ticket->logged_by }}</td>
-                                <td>
-                                    @if ($ticket->user)
-                                        {{ ucwords($ticket->user->first_name) }}
-                                        {{ ucwords($ticket->user->last_name) }}
-                                    @endif
-                                </td>
+                                @auth
+                                    <td>
+                                        @if ($ticket->user)
+                                            {{ ucwords($ticket->user->first_name) }}
+                                            {{ ucwords($ticket->user->last_name) }}
+                                        @endif
+                                    </td>
+                                @endauth
                                 <td class="th-functions">
                                     <form class="" action="{{ route('delete.ticket', [$ticket->id]) }}"
                                         method="POST">
 
-                                        <a href="{{ route('show.ticket', $ticket->id) }}" id="showdetails" title="Ticket Details"
+                                        <a href="{{ route('show.ticket', $ticket->id) }}" id="showdetails"
+                                            title="Ticket Details"
                                             class="ticket-details-button mb-1 p-1 bg-blue-900 rounded-md fa fa-info-circle"></a>
 
-                                        <a href="{{ route('edit.ticket', $ticket->id) }}" id="editdetails" title="Edit Ticket"
+                                        <a href="{{ route('edit.ticket', $ticket->id) }}" id="editdetails"
+                                            title="Edit Ticket"
                                             class="edit-ticket-button mb-1 p-1 bg-green-900 rounded-md text-xl fa fa-pencil">
                                         </a>
 
                                         @csrf
                                         @method('DELETE')
 
-                                        <button title="Delete Ticket"
-                                            class="delete-ticket-button bg-red-900 rounded-md p-1 fa fa-trash-o"
-                                            type="submit">
-                                        </button>
+                                        @auth
+                                            <button title="Delete Ticket"
+                                                class="delete-ticket-button bg-red-900 rounded-md p-1 fa fa-trash-o"
+                                                type="submit">
+                                            </button>
+                                        @endauth
                                     </form>
                                 </td>
                         </tr>
@@ -119,11 +134,12 @@
                 </table>
 
                 @method('GET')
+                @auth
+                    <x-button title="Show Tickets" class="mt-2" name="viewtickets" type="submit"> &#x1F441; </x-button>
 
-                <x-button title="Show Tickets" class="mt-2" name="viewtickets" type="submit"> &#x1F441; </x-button>
-
-                <x-button title="Edit Tickets" name="edittickets" type="submit" class="mt-2"
-                    action="{{ route('edit.tickets', [$tickets->pluck('id')]) }}"> &#128393; </x-button1>
+                    <x-button title="Edit Tickets" name="edittickets" type="submit" class="mt-2"
+                        action="{{ route('edit.linked', [$tickets->pluck('id')]) }}"> &#128393; </x-button>
+                @endauth    
             </form>
         </div>
     </body>

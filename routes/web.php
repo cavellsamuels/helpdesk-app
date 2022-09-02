@@ -17,15 +17,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('guest')->group(function () {
-    Route::get('/', [PageController::class, 'showIndex'])->name('show.index');
-});
+Route::get('/', [PageController::class, 'showGlobalDashboard'])->name('show.global.dashboard');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [PageController::class, 'showGlobalDashboard'])->name('show.global.dashboard');
-    Route::any('/search', [TicketController::class, 'search'])->name('search.ticket');
+    Route::get('/search', [TicketController::class, 'search'])->name('search.ticket');
     Route::get('/assigneddashboard', [PageController::class, 'showAssignedDashboard'])->name('show.assigned.dashboard');
     Route::get('/unassigneddashboard', [PageController::class, 'showUnassignedDashboard'])->name('show.unassigned.dashboard');
 });
@@ -41,10 +38,11 @@ Route::group(['prefix' => 'tickets'], function () {
 Route::group(['prefix' => 'tickets'], function () {
     Route::middleware('auth')->group(function () {
         Route::delete('/delete/{ticket}', [TicketController::class, 'delete'])->name('delete.ticket');
+        Route::get('{ticket}/download/{file}', [FileController::class, 'download'])->name('file.download');
+
         Route::get('/linked', [TicketController::class, 'linktickets'])->name('linked.ticket');
-        Route::get('editlinked/{tickets}', [TicketController::class, 'updatelinked'])->name('edit.tickets');
-        Route::put('updatelinked/{tickets}', [TicketController::class, 'updatelinked'])->name('update.tickets');
-        Route::get('{ticket}/download{file}', [FileController::class, 'download'])->name('file.download');
+        Route::get('editlinked/{tickets}', [TicketController::class, 'showEditLinked'])->name('edit.linked');
+        Route::put('updatelinked/{tickets}', [TicketController::class, 'updatelinked'])->name('update.linked');
     });
 });
 

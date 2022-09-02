@@ -6,35 +6,28 @@
                 <!-- Logo -->
                 {{-- @auth --}}
                 <div class="shrink-0 flex items-center">
-                    @auth
                     <a href="{{ route('show.global.dashboard') }}">
                         <x-application-logo class="block h-10 w-auto fill-current text-gray-600" />
                     </a>
-                    @endauth
-                    @guest
-                        <a href="{{ route('show.index') }}">
-                            <x-application-logo class="block h-10 w-auto fill-current text-gray-600" />
-                        </a>
-                    @endguest
                 </div>
                 {{-- @endauth --}}
 
-                @guest
+                {{-- @guest
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex ">
                         <x-nav-link :href="route('show.index')" :active="request()->routeIs('show.index')">
                             {{ __('Home') }}
                         </x-nav-link>
                     </div>
-                @endguest
+                @endguest --}}
 
                 <!-- Navigation Links -->
-                @auth
-                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                        <x-nav-link :href="route('show.index')" :active="request()->routeIs('show.global.dashboard')">
-                            {{ __('All Tickets  ') }}
-                        </x-nav-link>
-                    </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('show.global.dashboard')" :active="request()->routeIs('show.global.dashboard')">
+                        {{ __('Home') }}
+                    </x-nav-link>
+                </div>
 
+                @auth
                     <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                         <x-nav-link :href="route('show.assigned.dashboard')" :active="request()->routeIs('show.assigned.dashboard')">
                             {{ __('My Tickets') }}

@@ -24,7 +24,7 @@ class EditLinkedRequest extends FormRequest
     public function rules()
     {
         return [
-            
+
         ];
     }
 }

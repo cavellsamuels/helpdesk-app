@@ -11,8 +11,8 @@ class Comment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'ticket_id',
         'details',
+        'ticket_id',
         'created_by',
     ];
 

@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\Ticket;authse
+use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -12,7 +12,6 @@ class TicketPolicy
 
     public function assignTicket(Ticket $ticket)
     {
-        
     }
 
     /**

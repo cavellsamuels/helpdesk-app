@@ -24,7 +24,7 @@ class SearchRequest extends FormRequest
     public function rules()
     {
         return [
-            'search' => 'max:255|string|regex:/^[a-zA-Z]+$/u|regex:/^[0-9]+$/'
+            'search' => 'max:255|string|regex:/^[a-zA-Z]+$/u|regex:/^[0-9]+$/',
         ];
     }
 }

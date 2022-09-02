@@ -2,9 +2,12 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Mockery;
 use Tests\TestCase;
+use App\Models\User;
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AuthenticationTest extends TestCase
 {
@@ -41,4 +44,23 @@ class AuthenticationTest extends TestCase
 
         $this->assertGuest();
     }
+
+    // public function test_users_can_log_out()
+    // {
+    //     $user = User::factory()->create();
+
+    //     $response = $this->post('/login', [
+    //         'email' => $user->email,
+    //         'password' => 'password',
+    //     ]);
+
+    //     $this->assertAuthenticated();
+
+    //     $guard = Mockery::mock(Guard::class);
+    //     $guard->expects('check')
+    //         ->andReturns(false);
+
+    //     Auth::shouldReceive('guard')
+    //         ->andReturns($guard);
+    // }
 }

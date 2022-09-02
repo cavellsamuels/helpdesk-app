@@ -24,7 +24,7 @@ class UpdateFileRequest extends FormRequest
     public function rules()
     {
         return [
-            'file' => 'max:10000'
+            'file' => 'max:10000',
         ];
     }
 }

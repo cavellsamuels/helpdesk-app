@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Auth\Events\Registered;
 use App\Http\Requests\RegisterUserRequest;
 
@@ -15,7 +17,7 @@ class RegisteredUserController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function create()
+    public function create(): View
     {
         return view('auth.register');
     }
@@ -28,9 +30,9 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(RegisterUserRequest $request)
+    public function store(RegisterUserRequest $request): RedirectResponse
     {
-        $user = User::create($request->validated());
+        $user = User::query()->create($request->validated());
 
         event(new Registered($user));
 

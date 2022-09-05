@@ -10,13 +10,13 @@ use App\Http\Requests\UpdateTicketRequest;
 
 class FileService
 {
-    public function createFile(Ticket $ticket, StoreTicketRequest $request)
+    public function createFile(Ticket $ticket, StoreTicketRequest $request): void
     {
         $file = $request->hasfile('file');
 
         if ($file) {
             $request->file('file')->store('public/files');
-            File::query()->create([
+            File::query()->create($request->validated() + [
                 'name' => $request->file('file')->getClientOriginalName(),
                 'file_size' => $request->file('file')->getSize(),
                 'ticket_id' => $ticket->id,
@@ -24,7 +24,7 @@ class FileService
         }
     }
 
-    public function updateFile(Ticket $ticket, UpdateTicketRequest $request)
+    public function updateFile(Ticket $ticket, UpdateTicketRequest $request): void
     {
         $ticketFile = $ticket->file;
 

@@ -5,14 +5,15 @@ namespace App\Services;
 use App\Models\User;
 use App\Models\Ticket;
 use App\Http\Requests\SearchRequest;
+use Illuminate\Database\Eloquent\Collection;
 
 class SearchService
 {
-    protected $urgencies;
+    protected array $urgencies;
 
-    protected $categories;
+    protected array $categories;
 
-    protected $itSupportUsers;
+    protected Collection $itSupportUsers;
 
     public function __construct()
     {

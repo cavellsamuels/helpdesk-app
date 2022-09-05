@@ -12,18 +12,15 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
-// use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Notification;
-use App\Notifications\CreatedTicketNotification;
-use App\Notifications\UpdatedTicketNotification;
+use Illuminate\Database\Eloquent\Collection;
 
 class TicketController extends Controller
 {
-    protected $urgencies;
+    protected array $urgencies;
 
-    protected $categories;
+    protected array $categories;
 
-    protected $itSupportUsers;
+    protected Collection $itSupportUsers;
 
     public function __construct()
     {
@@ -51,8 +48,6 @@ class TicketController extends Controller
     public function store(TicketService $ticketService, StoreTicketRequest $request, Ticket $ticket, FileController $fileController, FileService $fileService): RedirectResponse
     {
         $ticketService->createTicket($request, $ticket, $fileController, $fileService);
-
-        Notification::send($this->itSupportUsers, new CreatedTicketNotification($ticket));
 
         return redirect()->route('show.global.dashboard')->with('success', 'Ticket Added Successfully');
     }
@@ -92,8 +87,6 @@ class TicketController extends Controller
     {
         $ticketService->updateTicket($request, $ticket, $file, $fileController, $fileService);
 
-        Notification::send($this->itSupportUsers, new UpdatedTicketNotification($ticket));
-
         return redirect()->route('show.global.dashboard')->with('success', 'Ticket Updated Successfully');
     }
 
@@ -109,38 +102,4 @@ class TicketController extends Controller
 
         return back()->with('success', 'Ticket Deleted Successfully');
     }
-
-    // public function linked(Request $request)
-    // {
-    //     $users = $this->itSupportUsers;
-    //     $tickets = Ticket::find($request->linkedtickets);
-    //     $urgencies = $this->urgencies;
-    //     $categories = $this->categories;
-
-    //     if ($tickets == true) {
-    //         if ($request->has('viewtickets')) {
-    //             return view('tickets.linked', compact('tickets', 'urgencies', 'categories'));
-    //         } elseif ($request->has('edittickets')) {
-    //             return view('tickets.edit-linked', compact('users', 'tickets', 'urgencies', 'categories'));
-    //         }
-    //     } else {
-    //         return back()->with('error', 'You Must Select At Least One Ticket');
-    //     }
-    // }
-
-    // public function updatelinked(Request $request, FileController $fileController, FileService $fileService, $tickets): RedirectResponse // NOT FULLY IMPLEMENTED
-    // {
-    //     $tId = explode(',', $tickets);
-    //     dd($tId);
-    //     $ticketIds = Ticket::all()->where('id', $tickets);
-
-    //     foreach ($ticketIds as $ticket) {
-    //         $ticket->update($request->only(['title', 'details', 'assigned_to', 'logged_by', 'urgency', 'category', 'open']));
-    //         $fileController->update($ticket, $request, $fileService);
-
-    //         // Notification::send($users, new UpdatedTicketNotification($ticket), compact('ticket')); //Not Working
-    //     }
-
-    //     return redirect()->route('show.global.dashboard')->with('success', 'Tickets Updated Successfully');
-    // }
 }

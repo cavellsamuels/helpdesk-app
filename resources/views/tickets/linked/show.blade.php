@@ -14,7 +14,7 @@
             <h1 class="font-medium leading-tight text-4xl mt-0 mb-6 text-white font-black underline font-sans"> Combined
                 Tickets </h1>
             <x-auth-validation-errors class="" :errors="$errors" />
-            <form action="{{ route('show.linked') }}" method="POST">
+            <form action="{{ route('show.linked', $tickets->pluck('id')) }}" method="POST">
                 @csrf
 
                 <table class="w-full border border-black border-collapse">

@@ -5,12 +5,15 @@ namespace App\Providers;
 use App\Models\User;
 use App\Providers\TicketUpdated;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Notification;
+use App\Notifications\CreatedTicketNotification;
 use App\Notifications\UpdatedTicketNotification;
 
 class SendEmailNotification implements ShouldQueue
 {
-    public $itSupportUsers;
+    public Collection $itSupportUsers;
+    
     /**
      * Create the event listener.
      *
@@ -27,9 +30,12 @@ class SendEmailNotification implements ShouldQueue
      * @param  \App\Providers\TicketUpdated  $event
      * @return void
      */
-    public function handle(TicketUpdated $event)
+    public function handle(TicketCreated $createEvent, TicketUpdated $updateEvent)
     {
-        $ticket = $event->ticket;
-        Notification::send($this->itSupportUsers, new UpdatedTicketNotification($ticket));
+        $createTicket = $createEvent->ticket;
+        Notification::send($this->itSupportUsers, new CreatedTicketNotification($createTicket));
+
+        $updateTicket = $updateEvent->ticket;
+        Notification::send($this->itSupportUsers, new UpdatedTicketNotification($updateTicket));
     }
 }

@@ -9,14 +9,15 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\FileController;
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
+use Illuminate\Database\Eloquent\Collection;
 
 class TicketService
 {
-    protected $urgencies;
+    protected array $urgencies;
 
-    protected $categories;
+    protected array $categories;
 
-    protected $itSupportUsers;
+    protected Collection $itSupportUsers;
 
     public function __construct()
     {
@@ -33,11 +34,13 @@ class TicketService
 
     public function updateTicket(UpdateTicketRequest $request, Ticket $ticket, File $file, FileController $fileController, FileService $fileService)
     {
-        $ticket->update($request->only(['title', 'details', 'urgency', 'category', 'open', 'assigned_to']) + (['reporting_email' => now()]));
+        $tickets = $ticket->update($request->only(['title', 'details', 'urgency', 'category', 'open', 'assigned_to']) + (['reporting_email' => now()]));
 
         if ($file) {
             $fileController->update($ticket, $request, $fileService);
         }
+
+        // event (new TicketCreated($tickets));
     }
 
     public function deleteTicket(Ticket $ticket)

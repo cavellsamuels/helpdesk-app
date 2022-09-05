@@ -2,22 +2,30 @@
 
 namespace App\Observers;
 
-use App\Http\Controllers\FileController;
-use App\Http\Requests\StoreTicketRequest;
+use App\Models\User;
 use App\Models\Ticket;
-use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\CreatedTicketNotification;
+use App\Notifications\UpdatedTicketNotification;
 
 class TicketObserver
 {
+    protected Collection $itSupportUsers;
+
+    public function __construct()
+    {
+        $this->itSupportUsers = User::where('role_id', 2)->get();
+    }
     /**
      * Handle the Ticket "created" event.
      *
      * @param  \App\Models\Ticket  $ticket
      * @return void
      */
-    public function created(Ticket $ticket, StoreTicketRequest $request, FileController $fileController)
+    public function created(Ticket $ticket)
     {
-        
+        Notification::send($this->itSupportUsers, new CreatedTicketNotification($ticket));
     }
 
     /**
@@ -28,7 +36,7 @@ class TicketObserver
      */
     public function updated(Ticket $ticket)
     {
-        //
+        Notification::send($this->itSupportUsers, new UpdatedTicketNotification($ticket));
     }
 
     /**

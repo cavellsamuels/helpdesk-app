@@ -41,10 +41,7 @@ class CreatedTicketNotification extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('Ticket #{{$ticket->id}}')
-                    ->action('Notification Action', url('/'))
-                    ->line('Ticket Has Been Created')
-                    ->line('Thanks');
+            ->line("A New Ticket Has Been Created");
     }
 
     /**

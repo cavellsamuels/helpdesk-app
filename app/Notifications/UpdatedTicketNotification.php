@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\Ticket;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,14 +12,16 @@ class UpdatedTicketNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
+    protected $ticket;
+
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Ticket $ticket)
     {
-        //
+        $this->ticket = $ticket;
     }
 
     /**
@@ -41,10 +44,8 @@ class UpdatedTicketNotification extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('Ticket #{{$ticket->id}}')
-                    ->action('Notification Action', url('/'))
-                    ->line('Has Been Updated')
-                    ->line('Thanks');
+            ->line("Ticket #{$this->ticket->id}")
+            ->line('Has Been Updated');
     }
 
     /**

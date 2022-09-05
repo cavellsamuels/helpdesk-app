@@ -15,12 +15,12 @@ class FileController extends Controller
         return Storage::download($ticket->file->path, $ticket->file->name);
     }
 
-    public function store(Ticket $ticket, StoreTicketRequest $request, FileService $fileService)
+    public function store(Ticket $ticket, StoreTicketRequest $request, FileService $fileService) : void
     {
         $fileService->createFile($ticket, $request);
     }   
 
-    public function update(Ticket $ticket, UpdateTicketRequest $request, FileService $fileService)
+    public function update(Ticket $ticket, UpdateTicketRequest $request, FileService $fileService): void
     {
         $fileService->updateFile($ticket, $request);
     }

@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-app-layout>
     <div class="mt-2">
         <x-auth-card>
             <title> Create Ticket </title>
@@ -106,4 +106,4 @@
             </form>
         </x-auth-card>
     </div>
-</x-guest-layout>
+</x-app-layout>

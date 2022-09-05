@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-app-layout>
     <x-auth-card>
         <h2 class="text-white font-bold text-4xl pb-4 pt-2 underline"> Update Comment </h2>
 
@@ -50,4 +50,4 @@
             </div>
         </form>
     </x-auth-card>
-</x-guest-layout>
+</x-app-layout>

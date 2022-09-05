@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\File;
 use App\Models\Comment;
+use App\Models\File;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

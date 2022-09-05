@@ -1,10 +1,13 @@
 <?php
 
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\FileController;
-use App\Http\Controllers\PageController;
-use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FileController;
+use App\Http\Controllers\TicketController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\AllTicketsController;
+use App\Http\Controllers\AssignedTicketContrroller;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\UnassignedTicketContrroller;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,33 +20,30 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [PageController::class, 'showGlobalDashboard'])->name('show.global.dashboard');
+Route::get('/', AllTicketsController::class)->name('show.global.dashboard');
 
 require __DIR__ . '/auth.php';
 
 Route::middleware('auth')->group(function () {
-    Route::get('/search', [TicketController::class, 'search'])->name('search.ticket');
-    Route::get('/assigneddashboard', [PageController::class, 'showAssignedDashboard'])->name('show.assigned.dashboard');
-    Route::get('/unassigneddashboard', [PageController::class, 'showUnassignedDashboard'])->name('show.unassigned.dashboard');
+    Route::get('/search', [SearchController::class, 'show'])->name('search.ticket');
+    Route::get('/assigneddashboard', AssignedTicketContrroller::class)->name('show.assigned.dashboard');
+    Route::get('/unassigneddashboard', UnassignedTicketContrroller::class)->name('show.unassigned.dashboard');
 });
 
 Route::group(['prefix' => 'tickets'], function () {
     Route::get('/create', [TicketController::class, 'create'])->name('create.ticket');
     Route::post('/store', [TicketController::class, 'store'])->name('store.ticket');
-    Route::get('/edit/{ticket}', [TicketController::class, 'edit'])->name('edit.ticket');
-    Route::put('/update/{ticket}', [TicketController::class, 'update'])->name('update.ticket');
-    Route::get('/show/{ticket}', [TicketController::class, 'show', CommentController::class, 'show'])->name('show.ticket');
+    Route::get('/{ticket}/edit', [TicketController::class, 'edit'])->name('edit.ticket');
+    Route::put('/{ticket}/update', [TicketController::class, 'update'])->name('update.ticket');
+    Route::get('/{ticket}/show', [TicketController::class, 'show', CommentController::class, 'show'])->name('show.ticket');
 });
 
-Route::group(['prefix' => 'tickets'], function () {
-    Route::middleware('auth')->group(function () {
-        Route::delete('/delete/{ticket}', [TicketController::class, 'delete'])->name('delete.ticket');
-        Route::get('{ticket}/download/{file}', [FileController::class, 'download'])->name('file.download');
-
-        Route::get('/linked', [TicketController::class, 'linktickets'])->name('linked.ticket');
-        Route::get('editlinked/{tickets}', [TicketController::class, 'showEditLinked'])->name('edit.linked');
-        Route::put('updatelinked/{tickets}', [TicketController::class, 'updatelinked'])->name('update.linked');
-    });
+Route::group(['prefix' => 'tickets', 'middleware' => 'auth'], function () {
+    Route::delete('/{ticket}/delete', [TicketController::class, 'delete'])->name('delete.ticket');
+    Route::get('{ticket}/download/{file}', [FileController::class, 'download'])->name('file.download');
+    Route::get('/linked', [TicketController::class, 'linked'])->name('show.linked');
+    Route::get('/{tickets}/editlinked', [TicketController::class, 'updatelinked'])->name('edit.linked');
+    Route::put('/{tickets}/updatelinked', [TicketController::class, 'updatelinked'])->name('update.linked');
 });
 
 Route::group(['prefix' => 'comments'], function () {

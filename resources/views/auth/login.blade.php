@@ -2,7 +2,7 @@
     <title> Log In </title>
 </head>
 
-<x-guest-layout>
+<x-app-layout>
     <div class="mt-60">
         <x-auth-card>
             <x-slot name="logo">
@@ -64,4 +64,4 @@
             </form>
         </x-auth-card>
     </div>
-</x-guest-layout>
+</x-app-layout>

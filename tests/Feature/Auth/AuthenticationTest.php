@@ -2,12 +2,12 @@
 
 namespace Tests\Feature\Auth;
 
-use Mockery;
-use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Auth;
+use Mockery;
+use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
 {

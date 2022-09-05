@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
 use App\Models\File;
-use App\Models\User;
 use App\Models\Ticket;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class FileTest extends TestCase
 {
@@ -17,7 +17,6 @@ class FileTest extends TestCase
     /** @test */
     public function check_if_files_can_be_downloaded()
     {
-
         $ticket = Ticket::factory()->create(['id' => 1]);
         $file = File::factory()->create(['name' => 'image.jpg', 'ticket_id' => 1]);
 
@@ -34,13 +33,13 @@ class FileTest extends TestCase
     public function check_if_files_can_be_uploaded_to_the_database()
     {
         $this->post('files', [
-            File::factory()->create(['name' => 'hello'])
+            File::factory()->create(['name' => 'hello']),
         ]);
         $this->get(route('show.global.dashboard'))
             ->assertOk();
 
         $this->assertDatabaseHas('files', [
-            'name' => 'hello'
+            'name' => 'hello',
         ]);
     }
 
@@ -80,7 +79,7 @@ class FileTest extends TestCase
             [
                 'title' => 'hello',
                 'urgency' => 2,
-                $ticket->file
+                $ticket->file,
             ]
         );
 

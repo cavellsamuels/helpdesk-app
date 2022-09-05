@@ -13,16 +13,15 @@
 
     <body>
         <div class="max-w-fit mx-auto px-4 sm:px-6 lg:px-8 mt-14">
-            <h1 class="font-medium leading-tight text-4xl mt-0 mb-6 text-white font-black underline font-sans"> 
+            <h1 class="font-medium leading-tight text-4xl mt-0 mb-6 text-white font-black underline font-sans">
                 Ticket Results </h1>
             <x-auth-validation-errors class="" :errors="$errors" />
 
-            <form action="{{ route('linked.ticket') }}" method="POST">
+            <form action="{{ route('show.linked') }}" method="POST">
                 @csrf
 
                 <table class="w-full border border-black border-collapse">
                     <tr>
-                        {{-- <th></th> --}}
                         <th> Ticket # </th>
                         <th> Title </th>
                         <th> Urgency </th>
@@ -37,10 +36,6 @@
 
                     @foreach ($ticketsId as $ticket)
                         <tr>
-                            {{-- <td>
-                                <x-input type="checkbox" id="linkedtickets" name="linkedtickets[]"
-                                    value="{{ $ticket->id }} 'active' => 'true'"></x-input>
-                            </td> --}}
                             <div>
                                 <td>{{ $ticket->id }}</td>
                                 <td>{{ $ticket->title }}</td>
@@ -105,10 +100,6 @@
 
                     @foreach ($ticketsTitle as $ticket)
                         <tr>
-                            {{-- <td>
-                                <x-input type="checkbox" id="linkedtickets" name="linkedtickets[]"
-                                    value="{{ $ticket->id }} 'active' => 'true'"></x-input>
-                            </td> --}}
                             <div>
                                 <td>{{ $ticket->id }}</td>
                                 <td>{{ $ticket->title }}</td>
@@ -171,14 +162,6 @@
                         </tr>
                     @endforeach
                 </table>
-
-                @method('GET')
-
-                {{-- <x-button title="Show Tickets" class="mt-2" name="viewtickets" type="submit"> View </x-button>
-
-                <x-button title="Edit Tickets" name="edittickets" type="submit" class="mt-2"
-                    action="{{ route('edit.linked', [$tickets->pluck('id')]) }}"> Edit </x-button1>
-                    </formx> --}}
         </div>
     </body>
 

@@ -24,13 +24,12 @@ class StoreTicketRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'title' => 'required|max:255|regex:/^[a-zA-Z]+$/u',
-            // 'details' => 'required|max:255|regex:/^[a-zA-Z]+$/u',
+            'title' => 'required|max:255|string',
+            'details' => 'required|max:255|string',
             'logged_by' => 'required',
             'urgency' => 'required',
             'category' => 'required',
-            // 'open' => 'required',
-            'file' => 'max:10000',
+            'file' => 'nullable',
         ];
     }
 }

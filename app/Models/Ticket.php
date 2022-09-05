@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Notifications\Notifiable;    
+use Illuminate\Notifications\Notifiable;
 
 class Ticket extends Model
 {
@@ -48,10 +48,10 @@ class Ticket extends Model
         'updated_at',
     ];
 
-    public function linked(): BelongsToMany
-    {
-        return $this->belongsToMany(LinkedTicket::class.'ticket_id');
-    }
+    // public function linked(): BelongsToMany
+    // {
+    //     return $this->belongsToMany(LinkedTicket::class.'ticket_id');
+    // }
 
     public function user(): BelongsTo
     {
@@ -63,7 +63,7 @@ class Ticket extends Model
         return $this->hasOne(File::class, 'ticket_id');
     }
 
-    public function comments(): HasMany
+    public function comment(): HasMany
     {
         return $this->hasMany(Comment::class, 'ticket_id');
     }

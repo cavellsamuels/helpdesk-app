@@ -17,12 +17,7 @@ class TicketObserver
      */
     public function created(Ticket $ticket, StoreTicketRequest $request, FileController $fileController)
     {
-        try {
-            $ticket = Ticket::query()->create($request->only(['title', 'details', 'urgency', 'category', 'open', 'logged_by', 'assigned_to']));
-            $fileController->store($ticket, $request);
-        } catch (QueryException $error) {
-            return back()->with('error', 'Ticket Unsuccessfully Added');
-        }
+        
     }
 
     /**

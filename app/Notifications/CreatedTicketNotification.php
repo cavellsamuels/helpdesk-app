@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class UpdatedTicketNotification extends Notification implements ShouldQueue
+class CreatedTicketNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -43,7 +43,7 @@ class UpdatedTicketNotification extends Notification implements ShouldQueue
         return (new MailMessage)
                     ->line('Ticket #{{$ticket->id}}')
                     ->action('Notification Action', url('/'))
-                    ->line('Has Been Updated')
+                    ->line('Ticket Has Been Created')
                     ->line('Thanks');
     }
 

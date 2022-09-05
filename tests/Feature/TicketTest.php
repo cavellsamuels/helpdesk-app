@@ -2,11 +2,10 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use App\Models\User;
 use App\Models\Ticket;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Symfony\Component\Console\Input\Input;
+use Tests\TestCase;
 
 class TicketTest extends TestCase
 {
@@ -95,7 +94,7 @@ class TicketTest extends TestCase
             "tickets/update/{$ticket->id}",
             [
                 'title' => 'hello',
-                'urgency' => 2
+                'urgency' => 2,
             ]
         );
         $this->get(route('show.global.dashboard'))

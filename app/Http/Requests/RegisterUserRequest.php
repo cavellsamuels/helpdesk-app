@@ -25,10 +25,22 @@ class RegisterUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'firstname' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z]+$/u'],
-            'lastname' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z]+$/u'],
+            'first_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z]+$/u'],
+            'last_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z]+$/u'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Password::defaults()],
+            'role_id' => []
         ];
+    }
+
+    public function prepareForValidation()
+    {
+        $this->merge([
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'email' => $this->email,
+            'password' => $this->password,
+            'role_id' => $this->role_id
+        ]);
     }
 }

@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
 use App\Models\Ticket;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,7 +21,7 @@ class CommentFactory extends Factory
         return [
             'details' => $this->faker->sentence(),
             'ticket_id' => Ticket::factory(),
-            'created_by' => User::factory()
+            'created_by' => User::factory(),
         ];
     }
 }

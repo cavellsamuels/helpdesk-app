@@ -2,7 +2,7 @@
     <title> Register </title>
 </head>
 
-<x-guest-layout>
+<x-app-layout>
     <div class="mt-20">
         <x-auth-card>
             <x-slot name="logo">
@@ -22,7 +22,7 @@
                 <div>
                     <x-label for="firstname" :value="__('First Name')" />
 
-                    <x-input id="firstname" class="block mt-1 w-full" type="text" name="firstname" :value="old('firstname')"
+                    <x-input id="first_name" class="block mt-1 w-full" type="text" name="first_name" :value="old('firstname')"
                         required autofocus />
                 </div>
 
@@ -30,7 +30,7 @@
                 <div class="mt-4">
                     <x-label for="lastname" :value="__('Last Name')" />
 
-                    <x-input id="lastname" class="block mt-1 w-full" type="text" name="lastname" :value="old('lastname')"
+                    <x-input id="last_name" class="block mt-1 w-full" type="text" name="last_name" :value="old('lastname')"
                         required autofocus />
                 </div>
 
@@ -62,7 +62,7 @@
                 <div class="mt-4">
                     <x-label for="roleid" :value="__('Role')" />
 
-                    <select id="roleid" class="block mt-1 w-full" name="roleid" required>
+                    <select id="role_id" class="block mt-1 w-full" name="role_id" required>
                         <option value="{{ App\Models\User::ITSUPPORT }}"> IT Support </option>
                         <option value="{{ App\Models\User::ADMIN }}"> Admin </option>
                     </select>
@@ -80,4 +80,4 @@
             </form>
         </x-auth-card>
     </div>
-</x-guest-layout>   
+</x-app-layout>   

@@ -30,5 +30,4 @@ class RegistrationTest extends TestCase
         $this->assertAuthenticated();
         $response->assertRedirect(route('show.global.dashboard'));
     }
-
 }

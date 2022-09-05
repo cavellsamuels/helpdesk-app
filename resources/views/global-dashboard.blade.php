@@ -1,24 +1,19 @@
 <x-app-layout>
-    <html lang="en">
 
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-        <link href="{{ asset('css/index.css') }}" rel="stylesheet">
-
+        <link href="{{ asset('css/index.css') }}" rel="stylesheet"> 
         <title> All Tickets </title>
     </head>
 
     <body>
         <div class="max-w-fit mx-auto px-4 sm:px-6 lg:px-8 mt-14">
-            <h1 class="font-medium leading-tight text-4xl mt-0 mb-6 text-white font-black underline font-sans"> All
-                Tickets </h1>
+            <x-heading1> All Tickets </x-heading1>
             <x-auth-validation-errors class="" :errors="$errors" />
 
             <form action="{{ route('search.ticket') }}" method="POST" role="search">
                 @csrf
+                @method('GET')
+
                 <div class="input-group mb-4">
                     @auth
                         <input type="text" class="form-control rounded-lg" name="search" placeholder="Search...">
@@ -34,10 +29,10 @@
                 </div>
             </form>
 
-            <form action="{{ route('linked.ticket') }}" method="POST">
+            <form action="{{ route('show.linked') }}" method="POST">
                 @csrf
 
-                <table class="w-full border border-black border-collapse">
+                <table>
                     <tr>
                         @auth
                             <th></th>
@@ -137,9 +132,9 @@
                 @auth
                     <x-button title="Show Tickets" class="mt-2" name="viewtickets" type="submit"> &#x1F441; </x-button>
 
-                    <x-button title="Edit Tickets" name="edittickets" type="submit" class="mt-2"
+                    <x-button title="Edit Tickets" name="edittickets" class="mt-2"
                         action="{{ route('edit.linked', [$tickets->pluck('id')]) }}"> &#128393; </x-button>
-                @endauth    
+                @endauth
             </form>
         </div>
     </body>

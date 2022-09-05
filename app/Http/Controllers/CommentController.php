@@ -2,45 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreCommentRequest;
-use App\Http\Requests\UpdateCommentRequest;
-use App\Models\Comment;
 use App\Models\Ticket;
-use App\Models\User;
+use App\Models\Comment;
+use App\Services\CommentService;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\QueryException;
+use App\Http\Requests\CommentRequest;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreCommentRequest  $request
+     * @param  \App\Http\Requests\CommentRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreCommentRequest $request, Ticket $ticket, Comment $comment, User $user): RedirectResponse
+    public function store(CommentService $commentService, CommentRequest $request, Ticket $ticket): RedirectResponse
     {
-        try {
-            if (Auth::user() == true) {
-                Comment::query()->create([
-                    'ticket_id' => $ticket->id,
-                    'details' => $request->details,
-                    'created_by' => Auth::user()->id,
-                ]);
-            } else {
-                Comment::query()->create([
-                    'ticket_id' => $ticket->id,
-                    'details' => $request->details,
-                ]);
-            }
-        } catch (QueryException $error) {
-            return back()->with('error', 'Please Write A Comment');
-        }
+        $commentService->createComment($request, $ticket);
 
         return back()->with('success', 'Comment Added Successfully');
-    }
+    }   
 
     /**
      * Show the form for editing the specified resource.
@@ -56,19 +38,13 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateCommentRequest  $request
+     * @param  \App\Http\Requests\CommentRequest  $request
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateCommentRequest $request, Ticket $ticket, Comment $comment): RedirectResponse
+    public function update(CommentRequest $request, Ticket $ticket, Comment $comment): RedirectResponse
     {
-        try {
-            $comment->update([
-                'details' => $request->details,
-            ]);
-        } catch (QueryException $error) {
-            return back()->with('error', 'Comment Could\'nt Update');
-        }
+        $comment->update(['details' => $request->details]);
 
         return redirect()->route('show.ticket', $ticket->id)->with('updatesuccess', 'Comment Sucessfully Updated');
     }
@@ -81,11 +57,7 @@ class CommentController extends Controller
      */
     public function delete(Ticket $ticket, Comment $comment): RedirectResponse
     {
-        try {
-            $comment->delete();
-        } catch (QueryException $error) {
-            return back()->with('error', 'Failed To Delete Comment');
-        }
+        $comment->delete();
 
         return back()->with('success', 'Comment Successfully Deleted');
     }

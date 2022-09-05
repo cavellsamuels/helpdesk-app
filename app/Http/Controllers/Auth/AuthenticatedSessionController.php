@@ -36,11 +36,9 @@ class AuthenticatedSessionController extends Controller
 
         return redirect()->route('show.global.dashboard', compact('tickets'));
 
-        $currentUserId = Auth::user()->role_id;
-
-        if ($currentUserId == 1) {
+        if (Auth::user()->role_id == 1) {
             Auth::guard('admin')->attempt($request->only('email', 'password'));
-        } elseif ($currentUserId == 2) {
+        } elseif (Auth::user()->role_id == 2) {
             Auth::guard('itsupport')->attempt($request->only('email', 'password'));
         }
     }

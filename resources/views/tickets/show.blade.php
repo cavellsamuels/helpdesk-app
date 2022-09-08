@@ -1,13 +1,11 @@
 <x-app-layout>
 
-    <head>
-        <title> Ticket Details </title>
-    </head>
+    <title> Ticket Details </title>
 
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-2 mx-0 mt-10 ">
             <x-auth-card>
-                <h2 class="text-white font-bold text-4xl pb-4 pt-2 underline"> Ticket #{{ $ticket->id }} Details </h2>
+                <x-heading2> Ticket #{{ $ticket->id }} Details </x-heading2>
 
                 <div class="">
                     <x-label for="title" :value="__('Title:')" />

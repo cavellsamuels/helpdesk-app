@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ticket;
-use App\Models\Comment;
 use Illuminate\View\View;
 use App\Services\FileService;
 use App\Services\TicketService;
@@ -11,9 +10,16 @@ use App\Interfaces\TicketInterface;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
+use App\Interfaces\TicketRepositoryInterface;
 
 class TicketController extends Controller implements TicketInterface
 {
+    protected TicketRepositoryInterface $ticketRepository;
+
+    public function __construct(TicketRepositoryInterface $ticketRepository)
+    {
+        $this->ticketRepository = $ticketRepository;
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -45,7 +51,7 @@ class TicketController extends Controller implements TicketInterface
      */
     public function show(Ticket $ticket): View
     {
-        // $comments = Comment::where('ticket_id', $ticket->id)->get();
+        $comments = $this->ticketRepository->getComments($ticket);
 
         return view('tickets.show', compact('ticket', 'comments'));
     }

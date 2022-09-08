@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
 
         view()->composer('*', function($view)
         {
-            $view->with('itSupportUsers', \App\Models\User::all()->where('role_id', 2));
+            $view->with('itSupportUsers', \App\Models\User::where('role_id', 2)->get());
             $view->with('urgencies', \App\Models\Ticket::$urgencies);
             $view->with('categories', \App\Models\Ticket::$categories);
         });

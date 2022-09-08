@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Services;
 
 use App\Http\Requests\SearchRequest;
 use App\Interfaces\SearchRepositoryInterface;
 
-class SearchController extends Controller
+class SearchService
 {
     protected SearchRepositoryInterface $searchRepository;
 
@@ -13,14 +13,13 @@ class SearchController extends Controller
     {
         $this->searchRepository = $searchRepository;
     }
-    public function __invoke(SearchRequest $request)
+
+    public function search(SearchRequest $request)
     {
         $tickets = $this->searchRepository->getTickets($request);
 
         if (count($tickets) == 0) {
             return back()->with('error', 'No Results Found');
         }
-
-        return view('search', compact('tickets'));
     }
 }

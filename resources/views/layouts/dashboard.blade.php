@@ -89,14 +89,14 @@
             <td>{{ $ticket->created_at_formatted }}</td>
             <td>{{ $ticket->logged_by }}</td>
             @if (Route::is('show.global.dashboard'))
-                @auth
-                    <td>
-                        @if ($ticket->user)
-                            {{ ucwords($ticket->user->first_name) }}
-                            {{ ucwords($ticket->user->last_name) }}
-                        @endif
-                    </td>
-                @endauth
+            @auth
+                <td>
+                    @if ($ticket->user)
+                        {{ ucwords($ticket->user->first_name) }}
+                        {{ ucwords($ticket->user->last_name) }}
+                    @endif
+                </td>
+            @endauth
             @endif
             <td class="th-functions">
                 <form class="" action="{{ route('delete.ticket', [$ticket->id]) }}" method="POST">

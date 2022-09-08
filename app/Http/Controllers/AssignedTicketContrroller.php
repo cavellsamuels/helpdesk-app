@@ -2,15 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ticket;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\Auth;
+use App\Interfaces\AssignedTicketRepositoryInterface;
 
 class AssignedTicketContrroller extends Controller
 {
+    protected AssignedTicketRepositoryInterface $assignedTicketRepository;
+
+    public function __construct(AssignedTicketRepositoryInterface $assignedTicketRepository)
+    {   
+        $this->assignedTicketRepository = $assignedTicketRepository;
+    }
+
     public function __invoke(): View
     {
-        $tickets = Ticket::all()->where('assigned_to', Auth::user()->id);
+        $tickets = $this->assignedTicketRepository->getAssignedTickets();
 
         return view('assigned-dashboard', compact('tickets'));
     }

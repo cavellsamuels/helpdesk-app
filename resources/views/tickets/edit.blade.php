@@ -16,7 +16,7 @@
                 @auth
 
                     <div class="">
-                        <x-label for="title" :value="__('Title:')" />
+                        <x-label for="title" :value="__('Title')" />
 
                         <x-input type="text" class="block mt-
                     1 w-full" name="title"
@@ -24,7 +24,7 @@
                     </div>
 
                     <div class="mt-4">
-                        <x-label for="details" :value="__('Details')" />
+                        <x-label for="details" :value="__('Details:')" />
 
                         <x-input type="text" class="block mt-1 w-full" name="details" placeholder="Details"
                             value="{{ ucwords($ticket->details) }}" />
@@ -108,7 +108,7 @@
                         <select name="assigned_to" value="" id="assigned_to" class="block mt-1 w-full rounded-xl"
                             name="assigned_to">
                             @if ($ticket->user)
-                            <option Selected hidden value="{{ $ticket->assigned_to }}"
+                                <option Selected hidden value="{{ $ticket->assigned_to }}"
                                     {{ $user = App\Models\User::find($ticket->assigned_to) }}>
                                     {{ ucwords($user->value('first_name') . ' ' . $user->value('last_name')) }}</option>
                                 <option value="" name="unassigned"> Unassign </option>

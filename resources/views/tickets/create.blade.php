@@ -9,21 +9,6 @@
 
                 <x-auth-validation-errors class="mb-3" :errors="$errors" />
 
-                @auth
-                    <!-- Assigned To -->
-                    <div class="">
-                        <x-label for="assignedTo" :value="__('Assigned To:')" />
-
-                        <select name="assigned_to" id="assigned_to" class="block mt-1 w-full rounded-xl" name="assigned_to">s
-                            <option disabled selected value<</option>
-                                @foreach ($itSupportUsers as $user)
-                            <option value="{{ $user->id }}">
-                                {{ ucwords($user->first_name . ' ' . $user->last_name) }} </option>
-                            @endforeach
-                        </select>
-                    </div>
-                @endauth
-
                 <!-- Title -->
                 <div class="mt-3">
                     <x-label for="title" :value="__('Title:')" />
@@ -52,33 +37,33 @@
                 <div class="mt-3">
                     <x-label for="urgency" :value="__('Urgency Level:')" />
 
-                    <select name="urgency" id="urgency" class="block mt-1 w-full rounded-xl" :value="old('urgency')"
+                    <x-select name="urgency" id="urgency" :value="old('urgency')"
                         required>
                         <option disabled selected value></option>
                         @foreach ($urgencies as $key => $value)
                             <option value="{{ $key }}"> {{ $value }}</option>
                         @endforeach
-                    </select>
+                    </x-select>
                 </div>
 
                 <!-- Category-->
                 <div class="mt-3">
                     <x-label for="category" :value="__('Category:')" />
 
-                    <select name="category" id="category" class="block mt-1 w-full rounded-xl" name="category"
+                    <x-select name="category" id="category" name="category"
                         :value="old('category')" required>
                         <option disabled selected value></option>
                         @foreach ($categories as $key => $value)
                             <option value="{{ $key }}"> {{ $value }}</option>
                         @endforeach
-                    </select>
+                    </x-select>
                 </div>
 
                 <!-- Open -->
                 <div class="mt-3">
                     <x-label for="open" :value="__('Open:')" />
 
-                    <select name="open" id="open" class="block mt-1 w-full rounded-xl" :value="old('open')"
+                    <x-select name="open" id="open" :value="old('open')"
                         required>
                         <option disabled selected value></option>
                         <option value="{{ App\Models\Ticket::OPEN }}">
@@ -87,7 +72,7 @@
                         <option value="{{ App\Models\Ticket::CLOSED }}">
                             No
                         </option>
-                    </select>
+                    </x-select>
                 </div>
 
                 <!-- File -->
@@ -102,7 +87,22 @@
                         {{ __('Submit') }}
                     </x-button>
                 </div>
+
+                @auth
+                    <!-- Assigned To -->
+                    <div class="">
+                        <x-label for="assignedTo" :value="__('Assigned To:')" />
+
+                        <x-select name="assigned_to" id="assigned_to" name="assigned_to">s
+                            <option disabled selected value<</option>
+                                @foreach ($itSupportUsers as $user)
+                            <option value="{{ $user->id }}">
+                                {{ ucwords($user->first_name . ' ' . $user->last_name) }} </option>
+                            @endforeach
+                        </x-select>
+                    </div>
+                @endauth
             </form>
         </x-auth-card>
     </div>
-</x-app-layout>
+    </htm </x-app-layout>

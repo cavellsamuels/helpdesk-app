@@ -30,7 +30,7 @@ class LinkedTicketsController extends Controller
     // {
     //     $tId = explode(',', $tickets);
     //     dd($tId);
-    //     $ticketIds = Ticket::all()->where('id', $tickets);
+    //     $ticketIds = Ticket::where('id', $tickets)->get();
 
     //     foreach ($ticketIds as $ticket) {
     //         $ticket->update($request->only(['title', 'details', 'assigned_to', 'logged_by', 'urgency', 'category', 'open']));

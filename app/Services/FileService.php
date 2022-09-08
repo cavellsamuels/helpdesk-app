@@ -28,8 +28,8 @@ class FileService
         $ticketFile = $ticket->file;
 
         if ($request->hasfile('file')) {
-            // Storage::delete($ticketFile);
             if ($ticketFile) {
+                Storage::delete($ticketFile);
                 $request->file('file')->store('public/files');
                 $ticketFile->update([
                     'name' => $request->file('file')->getClientOriginalName(),

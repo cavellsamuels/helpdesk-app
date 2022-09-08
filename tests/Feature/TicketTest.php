@@ -2,19 +2,28 @@
 
 namespace Tests\Feature;
 
-use App\Models\Ticket;
-use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use App\Models\Ticket;
+use Illuminate\Foundation\Auth\User as AuthUser;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class TicketTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $ticket;
+    protected AuthUser $user;
+
+    protected Ticket $ticket;
+
+    public function setUp(): void
+    {
+        parent::setup();
+
+        $this->user = AuthUser::create(['first_name' => 'john', 'last_name' => 'doe', 'email' => 'test@test.com', 'password' => 'password', 'role_id' => 2]);
+    }
 
     /** @test  */
-    public function create_a_new_ticket_view_can_be_loaded()
+    public function create_ticket_view_can_be_loaded()
     {
         $this->get(route('create.ticket'))
             ->assertOk()
@@ -31,36 +40,40 @@ class TicketTest extends TestCase
     /** @test  */
     public function a_ticket_can_be_added_through_the_form_by_a_guest_without_a_file()
     {
+        $ticket = Ticket::factory()->create();
+
         $this->post(
             'tickets/store',
             [
-                Ticket::factory()->create(),
+                'title' => $ticket->title,
+                'details' => $ticket->details,
+                'logged_by' => $ticket->logged_by,
+                'urgency' => $ticket->urgency,
+                'category' => $ticket->category,
+                'open' => $ticket->open,
             ]
-        );
-        $response = $this->get('/')
-            ->assertOk();
+        )->assertValid();
+
+        $this->assertDatabaseHas('tickets', ['details' => $ticket->details]);
     }
 
     /** @test  */
     public function a_ticket_can_be_added_through_the_form_by_an_authenticated_user_without_a_file()
     {
-        $user = User::factory()->create();
+        $ticket = Ticket::factory()->create();
 
-        $response = $this->post('/login', [
-            'email' => $user->email,
-            'password' => 'password',
-        ]);
-
-        $this->assertAuthenticated();
-
-        $this->post(
+        $this->actingAs($this->user)->post(
             'tickets/store',
             [
-                Ticket::factory()->create(),
+                'title' => $ticket->title,
+                'details' => $ticket->details,
+                'logged_by' => $ticket->logged_by,
+                'urgency' => $ticket->urgency,
+                'category' => $ticket->category,
+                'open' => $ticket->open,
+                'assigned_to' => $ticket->open,
             ]
-        );
-        $response = $this->get(route('show.global.dashboard'))
-            ->assertStatus(200);
+        )->assertValid();
     }
 
     /** @test  */
@@ -68,7 +81,7 @@ class TicketTest extends TestCase
     {
         $ticket = Ticket::factory()->create();
 
-        $this->get("tickets/show/{$ticket->id}")
+        $this->get("tickets/{$ticket->id}/show")
             ->assertStatus(200)
             ->assertSee($ticket->name);
     }
@@ -76,65 +89,45 @@ class TicketTest extends TestCase
     /** @test  */
     public function a_ticket_can_be_updated_through_the_form_without_a_file()
     {
-        $user = User::factory()->create();
-
-        $response = $this->post('/login', [
-            'email' => $user->email,
-            'password' => 'password',
-        ]);
-
-        $this->assertAuthenticated();
-
         $ticket = Ticket::factory()->create(['title' => 'world', 'urgency' => 1]);
 
-        $this->get("tickets/show/{$ticket->id}")
-            ->assertStatus(200);
-
-        $response = $this->put(
-            "tickets/update/{$ticket->id}",
+        $this->put(
+            "tickets/{$ticket->id}/update",
             [
                 'title' => 'hello',
                 'urgency' => 2,
             ]
         );
         $this->get(route('show.global.dashboard'))
-            ->assertOk();
+            ->assertOk()
+            ->assertSee("hello");
     }
 
     /** @test  */
     public function a_ticket_can_be_deleted()
     {
-        $ticket = Ticket::factory()->create(['title' => 'g']);
+        $ticket = Ticket::factory()->create(['title' => 'Hello']);
 
-        $this->get(route('show.global.dashboard'))->assertSee('g');
+        $this->delete("/tickets/{$ticket->id}/delete")->assertValid()
+            ->assertDontSee($ticket);
 
-        $this->delete("/tickets/delete/{$ticket->id}");
-
-        $this->get(route('show.global.dashboard'))
-            ->assertOk();
+        $this->assertDatabaseHas('tickets', ['title' => $ticket->title]);
     }
 
+    //NOT WORKING
     /** @test  */
-    // public function see_if_correct_search_results_are_displayed() //NOT WORKING
+    // public function see_if_correct_search_results_are_displayed()
     // {
-    //     $user = User::factory()->create();
-
-    //     $response = $this->post('/login', [
-    //         'email' => $user->email,
-    //         'password' => 'password',
-    //     ]);
-
-    //     $this->assertAuthenticated();
+    //     $this->actingAs($this->user);
 
     //     $ticket = Ticket::factory()->create(['id' => 1, 'title' => 'Login Issue']);
     //     $search = 1;
-    //     $ticketsId = $ticket->where('id', $search);
 
-    //     //Check what
+    //     //get the model inputted in search
 
-    //     // direct to search page with correct details showing
-    //     $this->get(route('search.ticket'))
-    //         ->assertOk()
+        
+
+    //     $$this->get(route('search.ticket'))->assertStatus(302)
     //         ->assertSee('Login Issue');
     // }
 }

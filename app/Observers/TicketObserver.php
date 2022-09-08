@@ -7,6 +7,7 @@ use App\Models\Ticket;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\CreatedTicketNotification;
+use App\Notifications\DeletedTicketNotification;
 use App\Notifications\UpdatedTicketNotification;
 
 class TicketObserver
@@ -47,7 +48,7 @@ class TicketObserver
      */
     public function deleted(Ticket $ticket)
     {
-        //
+        Notification::send($this->itSupportUsers, new DeletedTicketNotification($ticket));
     }
 
     /**

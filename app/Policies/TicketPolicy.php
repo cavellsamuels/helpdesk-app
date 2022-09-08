@@ -2,16 +2,27 @@
 
 namespace App\Policies;
 
-use App\Models\Ticket;
 use App\Models\User;
+use App\Models\Ticket;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class TicketPolicy
 {
     use HandlesAuthorization;
 
-    public function assignTicket(Ticket $ticket)
+    public function deleteTicket(): void
     {
+        if (! Auth::user()) {
+            abort(403);
+        }
+    }
+
+    public function deleteComment(): void
+    {
+        if (!Auth::user()) {
+            abort(403);
+        }
     }
 
     /**
@@ -20,7 +31,7 @@ class TicketPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $user)
+    public function viewAny(User $user): void
     {
         //
     }
@@ -32,7 +43,7 @@ class TicketPolicy
      * @param  \App\Models\Ticket  $ticket
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Ticket $ticket)
+    public function view(User $user, Ticket $ticket): void
     {
         //
     }
@@ -43,7 +54,7 @@ class TicketPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function create(User $user)
+    public function create(User $user): void
     {
         //
     }
@@ -55,7 +66,7 @@ class TicketPolicy
      * @param  \App\Models\Ticket  $ticket
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Ticket $ticket)
+    public function update(User $user, Ticket $ticket): void
     {
         //
     }
@@ -67,7 +78,7 @@ class TicketPolicy
      * @param  \App\Models\Ticket  $ticket
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Ticket $ticket)
+    public function delete(User $user, Ticket $ticket): void
     {
         //
     }
@@ -79,7 +90,7 @@ class TicketPolicy
      * @param  \App\Models\Ticket  $ticket
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Ticket $ticket)
+    public function restore(User $user, Ticket $ticket): void
     {
         //
     }
@@ -91,7 +102,7 @@ class TicketPolicy
      * @param  \App\Models\Ticket  $ticket
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Ticket $ticket)
+    public function forceDelete(User $user, Ticket $ticket): void
     {
         //
     }

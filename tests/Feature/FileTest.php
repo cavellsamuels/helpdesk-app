@@ -2,77 +2,51 @@
 
 namespace Tests\Feature;
 
+use Tests\TestCase;
 use App\Models\File;
 use App\Models\Ticket;
-use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class FileTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function check_if_files_can_be_downloaded()
-    {
-        $ticket = Ticket::factory()->create(['id' => 1]);
-        $file = File::factory()->create(['name' => 'image.jpg', 'ticket_id' => 1]);
-
-        $response = $this->get("tickets/show/{$ticket->id}");
-        $response->assertOk();
-
-        $this->get("tickets/{$ticket->id}/download/{$file}");
-
-        $response = $this->get("tickets/show/{$ticket->id}");
-        $response->assertOk();
-    }
-
-    /** @test */
-    public function check_if_files_can_be_uploaded_to_the_database()
+    public function check_if_files_can_be_uploaded_to_the_database(): void
     {
         $this->post('files', [
-            File::factory()->create(['name' => 'hello']),
+            $file = File::factory()->create(['name' => 'hello', 'size' => 1000, 'ticket_id' => 1,]),
         ]);
-        $this->get(route('show.global.dashboard'))
-            ->assertOk();
 
         $this->assertDatabaseHas('files', [
             'name' => 'hello',
+            'path' => $file->path,
+            'size' => 1000,
+            'ticket_id' => 1,
         ]);
     }
 
     /** @test */
-    public function check_if_a_file_can_be_uploaded_to_the_storage_folder()
+    public function check_if_a_file_can_be_uploaded_to_the_storage_folder(): void
     {
+        $file = FIle::factory()->create();
         Storage::fake('local');
 
-        $ticket = Ticket::factory()->create(['id' => 1]);
-        $file = UploadedFile::fake(File::factory()->create(['ticket_id' => 1]));
-
-        $response = $this->post('/files', [
-            'file' => $file,
+        $this->json('POST', '/local', [
+            UploadedFile::fake()->image($file),
         ]);
 
         Storage::disk('local');
-        $this->assertFileExists("{$ticket->file->path}");
+        $this->assertFileExists($file->path);
     }
 
     /** @test  */
-    public function check_if_a_file_can_be_updated()
+    public function check_if_a_file_can_be_updated(): void
     {
-        $user = User::factory()->create();
-
-        $response = $this->post('/login', [
-            'email' => $user->email,
-            'password' => 'password',
-        ]);
-
-        $this->assertAuthenticated();
-
         $ticket = Ticket::factory()->create(['id' => 1]);
-        $file = File::factory()->create(['name' => 'Hello', 'ticket_id' => 1]);
+        File::factory()->create(['name' => 'Hello', 'ticket_id' => 1]);
 
         $this->put(
             "tickets/update/{$ticket->id}",
@@ -81,9 +55,19 @@ class FileTest extends TestCase
                 'urgency' => 2,
                 $ticket->file,
             ]
-        );
+        )->assertValid();
 
-        $this->get(route('show.global.dashboard'))
-            ->assertOk();
+        $this->assertDatabaseHas('files', ['name' => $ticket->file->name]);
+    }
+
+    /** @test */
+    public function check_if_files_can_be_downloaded(): void
+    {
+        $ticket = Ticket::factory()->create(['id' => 1]);
+        $file = File::factory()->create(['name' => 'image.jpg', 'ticket_id' => 1]);
+
+        $response = $this->get("tickets/{$ticket->id}/download/{$file->id}");
+
+        $response->assertRedirect();
     }
 }

@@ -2,33 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\File;
-use App\Models\User;
 use App\Models\Ticket;
 use App\Models\Comment;
+use Illuminate\View\View;
 use App\Services\FileService;
 use App\Services\TicketService;
-use Illuminate\Contracts\View\View;
+use App\Interfaces\TicketInterface;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
-use Illuminate\Database\Eloquent\Collection;
 
-class TicketController extends Controller
+class TicketController extends Controller implements TicketInterface
 {
-    protected array $urgencies;
-
-    protected array $categories;
-
-    protected Collection $itSupportUsers;
-
-    public function __construct()
-    {
-        $this->urgencies = Ticket::$urgencies;
-        $this->categories = Ticket::$categories;
-        $this->itSupportUsers = User::where('role_id', 2)->get();
-    }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -36,7 +21,7 @@ class TicketController extends Controller
      */
     public function create(): View
     {
-        return view('tickets.create', ['users' => $this->itSupportUsers, 'urgencies' => $this->urgencies, 'categories' => $this->categories]);
+        return view('tickets.create');
     }
 
     /**
@@ -45,10 +30,10 @@ class TicketController extends Controller
      * @param  \App\Http\Requests\StoreTicketRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(TicketService $ticketService, StoreTicketRequest $request, Ticket $ticket, FileController $fileController, FileService $fileService): RedirectResponse
+    public function store(StoreTicketRequest $request, TicketService $ticketService, Ticket $ticket, FileController $fileController, FileService $fileService): RedirectResponse
     {
         $ticketService->createTicket($request, $ticket, $fileController, $fileService);
-
+        
         return redirect()->route('show.global.dashboard')->with('success', 'Ticket Added Successfully');
     }
 
@@ -58,11 +43,11 @@ class TicketController extends Controller
      * @param  \App\Models\Ticket  $ticket
      * @return \Illuminate\Http\Response
      */
-    public function show(Ticket $ticket, File $file): View
+    public function show(Ticket $ticket): View
     {
-        $comments = Comment::where('ticket_id', $ticket->id)->get();
+        // $comments = Comment::where('ticket_id', $ticket->id)->get();
 
-        return view('tickets.show', compact('ticket', 'file', 'comments'), ['users' => $this->itSupportUsers, 'urgencies' => $this->urgencies, 'categories' => $this->categories]);
+        return view('tickets.show', compact('ticket', 'comments'));
     }
 
     /**
@@ -73,7 +58,7 @@ class TicketController extends Controller
      */
     public function edit(Ticket $ticket): View
     {
-        return view('tickets.edit', compact('ticket'), ['users' => $this->itSupportUsers, 'urgencies' => $this->urgencies, 'categories' => $this->categories]);
+        return view('tickets.edit', compact('ticket'));
     }
 
     /**
@@ -83,9 +68,9 @@ class TicketController extends Controller
      * @param  \App\Models\Ticket  $ticketlinked.
      * @return \Illuminate\Http\Response
      */
-    public function update(TicketService $ticketService, FileService $fileService, UpdateTicketRequest $request, Ticket $ticket, File $file, FileController $fileController): RedirectResponse
+    public function update(UpdateTicketRequest $request, TicketService $ticketService, Ticket $ticket, FileController $fileController, FileService $fileService): RedirectResponse
     {
-        $ticketService->updateTicket($request, $ticket, $file, $fileController, $fileService);
+        $ticketService->updateTicket($request, $ticket, $fileController, $fileService);
 
         return redirect()->route('show.global.dashboard')->with('success', 'Ticket Updated Successfully');
     }
@@ -96,7 +81,7 @@ class TicketController extends Controller
      * @param  \App\Models\Ticket  $ticket
      * @return \Illuminate\Http\Response
      */
-    public function delete(TicketService $ticketService, Ticket $ticket): RedirectResponse
+    public function destroy(TicketService $ticketService, Ticket $ticket): RedirectResponse
     {
         $ticketService->deleteTicket($ticket);
 

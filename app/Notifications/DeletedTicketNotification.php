@@ -8,11 +8,9 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class UpdatedTicketNotification extends Notification implements ShouldQueue
+class DeletedTicketNotification extends Notification implements ShouldQueue
 {
     use Queueable;
-
-    protected $ticket;
 
     /**
      * Create a new notification instance.
@@ -44,9 +42,9 @@ class UpdatedTicketNotification extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->greeting('Ticket Updated!')
+            ->greeting('Ticket Deleted!')
             ->line("Ticket #{$this->ticket->id}")
-            ->line('Has Been Updated');
+            ->line('Has Been Deleted');
     }
 
     /**

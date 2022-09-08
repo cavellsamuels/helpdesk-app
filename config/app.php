@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Auth\Access\Gate;
 use Illuminate\Support\Facades\Facade;
 
 return [
@@ -191,12 +192,11 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
     ],
-
     /*
     |--------------------------------------------------------------------------
     | Class Aliases
@@ -209,7 +209,10 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        // 'ExampleClass' => App\Example\ExampleClass::class,
+        'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 
+    'date_format' => [
+        'front' => 'd/m/Y',
+    ]
 ];

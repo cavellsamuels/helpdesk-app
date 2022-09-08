@@ -25,7 +25,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         TicketUpdated::class => [
             SendEmailNotification::class
-        ], 
+        ],
+        TicketDeleted::class => [
+            SendEmailNotification::class
+        ],
     ];
 
     /**

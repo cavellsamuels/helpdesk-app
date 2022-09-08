@@ -1,8 +1,9 @@
-<head>
-    <title> Ticket Details </title>
-</head>
-
 <x-app-layout>
+
+    <head>
+        <title> Ticket Details </title>
+    </head>
+
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-2 mx-0 mt-10 ">
             <x-auth-card>
@@ -35,6 +36,7 @@
 
                 <div class="mt-4">
                     <x-label for="category" :value="__('Category:')" />
+
                     <select disabled name="category" id="category" class="block mt-1 w-full rounded-xl">
                         <option selected hidden value="{{ $ticket->category }}">
                             @foreach ($categories as $key => $value)
@@ -88,7 +90,7 @@
                         value="{{ $ticket->created_at->format('d/m/Y | h:m A ') }}" readonly />
                 </div>
 
-                <div class="mt-4">
+                <div class="mt-4 mb-4">
                     <x-label for="loggedby" :value="__('Logged By:')" />
                     <x-input type="text" class="block mt-1 w-full" name="loggedby" placeholder="Name"
                         value="{{ ucwords($ticket->logged_by) }}" readonly />
@@ -107,7 +109,7 @@
                             @else
                                 <option selected hidden value="">N/A</option>
                             @endif
-                            @foreach ($users as $user)
+                            @foreach ($itSupportUsers as $user)
                                 <option value="{{ $user->id }}">
                                     {{ ucwords($user->first_name . ' ' . $user->last_name) }} </option>
                             @endforeach
@@ -126,7 +128,7 @@
                     <form action="{{ route('create.comment', ['ticket' => $ticket]) }}" method="POST">
                         @csrf
 
-                        <x-textarea name="details" placeholder="Leave a Comment..."></x-textarea>
+                        <x-textarea name="details" placeholder="Leave a Comment...">{{ null }}</x-textarea>
 
                         <x-button type="submit"> Post </x-button>
 
@@ -139,8 +141,7 @@
                                 </x-label>
                             @endif
 
-                            <x-textarea name="details" readonly>{{ ucwords($comment->details) }}
-                            </x-textarea>
+                            <x-textarea name="details" readonly>{{ ucwords($comment->details) }}</x-textarea>
                         </div>
 
                         <form class="" action="{{ route('delete.comment', [$ticket->id, $comment->id]) }}"

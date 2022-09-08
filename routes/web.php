@@ -40,11 +40,10 @@ Route::group(['prefix' => 'tickets'], function () {
 });
 
 Route::group(['prefix' => 'tickets', 'middleware' => 'auth'], function () {
-    Route::delete('/{ticket}/delete', [TicketController::class, 'delete'])->name('delete.ticket');
+    Route::delete('/{ticket}/delete', [TicketController::class, 'destroy'])->name('delete.ticket');
     Route::get('{ticket}/download/{file}', [FileController::class, 'download'])->name('file.download');
     Route::group(['prefix' => 'linked'], function () {
         Route::get('/{tickets}/show', [LinkedTicketsController::class, 'show'])->name('show.linked');
-        // Route::get('/{tickets}/edit', [LinkedTicketsController::class, 'edit'])->name('edit.linked');
         Route::put('/{tickets}/update', [LinkedTicketsController::class, 'update'])->name('update.linked');
     });
 });
@@ -53,5 +52,5 @@ Route::group(['prefix' => 'comments'], function () {
     Route::post('{ticket}/store', [CommentController::class, 'store'])->name('create.comment');
     Route::get('{ticket}/edit/{comment}', [CommentController::class, 'edit'])->name('edit.comment');
     Route::put('{ticket}/update/{comment}', [CommentController::class, 'update'])->name('update.comment');
-    Route::delete('{ticket}/delete/{comment}', [CommentController::class, 'delete'])->name('delete.comment');
+    Route::delete('{ticket}/delete/{comment}', [CommentController::class, 'destroy'])->name('delete.comment');
 });

@@ -2,55 +2,54 @@
 
 namespace Tests\Feature;
 
-use App\Models\Comment;
-use App\Models\Ticket;
-use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use App\Models\Ticket;
+use App\Models\Comment;
+use Illuminate\Foundation\Auth\User as AuthUser;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CommentTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected AuthUser $user;
+    
+    public function setUp(): void
+    {
+        parent::setUp();
+        
+        $this->user = AuthUser::create(['first_name' => 'john', 'last_name' => 'doe', 'email' => 'test@test.com', 'password' => 'password', 'role_id' => 2]);
+    }
     /** @test  */
     public function check_if_a_comment_can_be_added_by_a_guest()
     {
         $ticket = Ticket::factory()->create(['id' => 1]);
+        $comment =  Comment::factory()->create();
 
-        $response = $this->get("tickets/show/{$ticket->id}")
-            ->assertOk();
-
-        $this->post(
+        $this->actingAs($this->user)->post(
             "comments/{$ticket->id}/store",
             [
-                Comment::factory()->create(),
+                'details' => $comment->details,
             ]
-        );
+        )
+            ->assertValid()
+            ->assertStatus(302);
     }
 
     /** @test  */
     public function check_if_a_comment_can_be_added_by_a_logged_in_user()
     {
-        $user = User::factory()->create();
-
-        $response = $this->post('/login', [
-            'email' => $user->email,
-            'password' => 'password',
-        ]);
-
-        $this->assertAuthenticated();
-
         $ticket = Ticket::factory()->create(['id' => 1]);
+        $comment = Comment::factory()->create();
 
-        $response = $this->get("tickets/show/{$ticket->id}")
-            ->assertOk();
-
-        $this->post(
+        $this->actingAs($this->user)->post(
             "comments/{$ticket->id}/store",
             [
-                Comment::factory()->create(),
+                'details' => $comment->details,
             ]
-        );
+        )->assertValid();
+
+        $this->assertDatabaseHas('comments', ['details' => $comment->details]);
     }
 
     /** @test  */
@@ -58,9 +57,6 @@ class CommentTest extends TestCase
     {
         $ticket = Ticket::factory()->create(['id' => 1]);
         $comment = Comment::factory()->create(['details' => 'test', 'ticket_id' => 1]);
-
-        $this->get("tickets/show/{$ticket->id}")
-            ->assertOk();
 
         $this->get("/comments/{$ticket->id}/edit/{$comment->id}")
             ->assertOk()
@@ -73,14 +69,12 @@ class CommentTest extends TestCase
         $ticket = Ticket::factory()->create(['id' => 1]);
         $comment = Comment::factory()->create(['details' => 'test', 'ticket_id' => 1]);
 
-        $response = $this->get("tickets/show/{$ticket->id}");
-
-        $response = $this->get("/comments/{$ticket->id}/edit/{$comment->id}");
-
-        $response = $this->put(
+        $this->put(
             "comments/{$ticket->id}/update/{$comment->id}",
             ['details' => 'test2']
-        )->assertRedirect("tickets/show/{$ticket->id}");
+        )->assertValid();
+
+        $this->assertDatabaseHas('comments', ['details' => 'test2']);
     }
 
     /** @test  */
@@ -89,12 +83,8 @@ class CommentTest extends TestCase
         $ticket = Ticket::factory()->create(['id' => 1]);
         $comment = Comment::factory()->create(['ticket_id' => 1]);
 
-        $response = $this->get("tickets/show/{$ticket->id}")
-            ->assertOk();
-
-        $this->delete("/comments/{$ticket->id}/delete/{$comment->id}");
-
-        $this->get("tickets/show/{$ticket->id}")
-            ->assertOk();
+        $this->delete("/comments/{$ticket->id}/delete/{$comment->id}")
+            ->assertValid()
+            ->assertDontSee($comment);
     }
 }

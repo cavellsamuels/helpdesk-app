@@ -6,7 +6,7 @@
 
     <div class="pb-6">
         <x-auth-card>
-            <h2 class="text-white font-bold text-4xl pb-4 pt-2 underline"> Edit Ticket #{{ $ticket->id }} </h2>
+            <x-heading2> Edit Ticket #{{ $ticket->id }} </x-heading2>
 
             <x-auth-validation-errors class="" :errors="$errors" />
 
@@ -16,7 +16,7 @@
                 @auth
 
                     <div class="">
-                        <x-label for="title" :value="__('Title')" />
+                        <x-label for="title" :value="__('Title:')" />
 
                         <x-input type="text" class="block mt-
                     1 w-full" name="title"
@@ -108,14 +108,14 @@
                         <select name="assigned_to" value="" id="assigned_to" class="block mt-1 w-full rounded-xl"
                             name="assigned_to">
                             @if ($ticket->user)
-                                <option Selected hidden value="{{ $ticket->assigned_to }}"
+                            <option Selected hidden value="{{ $ticket->assigned_to }}"
                                     {{ $user = App\Models\User::find($ticket->assigned_to) }}>
                                     {{ ucwords($user->value('first_name') . ' ' . $user->value('last_name')) }}</option>
                                 <option value="" name="unassigned"> Unassign </option>
                             @else
                                 <option selected hidden value="">-- Select a User --</option>
                             @endif
-                            @foreach ($users as $user)
+                            @foreach ($itSupportUsers as $user)
                                 <option value="{{ $user->id }}">
                                     {{ ucwords($user->first_name . ' ' . $user->last_name) }} </option>
                             @endforeach

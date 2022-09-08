@@ -38,7 +38,7 @@
                                 @else
                                     <option selected hidden value="">-- Select a User --</option>
                                 @endif
-                                @foreach ($users as $user)
+                                @foreach ($itSupportUsers as $user)
                                     <option value="{{ $user->id }}">
                                         {{ ucwords($user->first_name . ' ' . $user->last_name) }} </option>
                                 @endforeach

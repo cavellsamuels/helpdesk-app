@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Ticket;
 use App\Models\Comment;
+use Illuminate\View\View;
 use App\Services\CommentService;
-use Illuminate\Contracts\View\View;
+use App\Interfaces\CommentInterface;
 use App\Http\Requests\CommentRequest;
 use Illuminate\Http\RedirectResponse;
 
-class CommentController extends Controller
+class CommentController extends Controller implements CommentInterface
 {
     /**
      * Store a newly created resource in storage.
@@ -22,7 +23,7 @@ class CommentController extends Controller
         $commentService->createComment($request, $ticket);
 
         return back()->with('success', 'Comment Added Successfully');
-    }   
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -55,7 +56,7 @@ class CommentController extends Controller
      * @param  \App\Models\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function delete(Ticket $ticket, Comment $comment): RedirectResponse
+    public function destroy(Ticket $ticket, Comment $comment): RedirectResponse
     {
         $comment->delete();
 

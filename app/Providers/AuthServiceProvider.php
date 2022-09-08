@@ -26,6 +26,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('assign-ticket', [TicketPolicy::class, 'assignTicket']);
+        Gate::define('/tickets/{ticket}/delete', [TicketPolicy::class, 'deleteTicket']);
+        Gate::define('/comments/{ticket}/{comment}/delete', [TicketPolicy::class, 'deleteComment']);
     }
 }

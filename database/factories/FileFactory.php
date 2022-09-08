@@ -23,7 +23,7 @@ class FileFactory extends Factory
         return [
             'name' => $this->faker->fileExtension(),
             'path' => $this->faker->filePath(),
-            'file_size' => $this->faker->randomNumber(),
+            'size' => $this->faker->randomNumber(),
             'ticket_id' => Ticket::factory(),
         ];
     }

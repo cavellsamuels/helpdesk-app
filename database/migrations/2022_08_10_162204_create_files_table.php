@@ -16,7 +16,8 @@ return new class extends Migration
         Schema::create('files', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('file_size');
+            $table->string('path');
+            $table->integer('size');
             $table->foreignId('ticket_id')->refrences('id')->on('tickets');
             $table->timestamps();
         });

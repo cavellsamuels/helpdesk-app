@@ -64,9 +64,11 @@ class TicketController extends Controller implements TicketInterface
      */
     public function edit(Ticket $ticket): View
     {
-        return view('tickets.edit', compact('ticket'));
-    }
+        $tickets = $this->ticketRepository->getTickets($ticket);
 
+        return view('tickets.edit', compact('ticket', 'tickets'));
+    }
+    
     /**
      * Update the specified resource in storage.
      *

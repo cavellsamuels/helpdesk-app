@@ -9,6 +9,11 @@ use App\Interfaces\AssignedTicketRepositoryInterface;
 
 class AssignedTicketRepository implements AssignedTicketRepositoryInterface
 {
+    public function getAllTickets(): Collection
+    {
+        return Ticket::all();
+    }
+
     public function getAssignedTickets(): Collection
     {
         return Ticket::where('assigned_to', Auth::user()->id)->get();

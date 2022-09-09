@@ -10,7 +10,7 @@ class LinkedTicketsController extends Controller
     public function show(Request $request)
     {
         $tickets = Ticket::find($request->linkedtickets);
-
+        
         if ($tickets == true) {
             if ($request->has('viewtickets')) {
                 return view('tickets.linked.show', compact('tickets'));
@@ -20,17 +20,19 @@ class LinkedTicketsController extends Controller
         } else {
             return back()->with('error', 'You Must Select At Least One Ticket');
         }
+        $this->update($tickets);
     }
 
-    public function update()
+    public function update($tickets)
     {
+        dd($tickets);
     }
 
     // public function updatelinked(Request $request, FileController $fileController, FileService $fileService, $tickets): RedirectResponse
     // {
     //     $tId = explode(',', $tickets);
     //     dd($tId);
-    //     $ticketIds = Ticket::where('id', $tickets)->get();
+    //     $ticketIds = Ticket::all()->where('id', $tickets);
 
     //     foreach ($ticketIds as $ticket) {
     //         $ticket->update($request->only(['title', 'details', 'assigned_to', 'logged_by', 'urgency', 'category', 'open']));

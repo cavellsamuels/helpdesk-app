@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateTicketRequest;
 
 class FileService
 {
+
     public function createFile(Ticket $ticket, StoreTicketRequest $request): void
     {
         if ($request->hasfile('file')) {

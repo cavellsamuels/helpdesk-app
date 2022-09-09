@@ -1,8 +1,6 @@
 <x-app-layout>
 
-    <head>
-        <title> Edit Ticket </title>
-    </head>
+    <title> Edit Ticket </title>
 
     <div class="pb-6">
         <x-auth-card>
@@ -118,6 +116,24 @@
                             @foreach ($itSupportUsers as $user)
                                 <option value="{{ $user->id }}">
                                     {{ ucwords($user->first_name . ' ' . $user->last_name) }} </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{-- Link Ticket --}}
+                    <div class="mt-3">
+                        <x-label for="linkTicket" :value="__('Linked To:')" />
+
+                        <select name="linkticket" class="block mt-1 w-full rounded-xl">
+                            
+                            @if ($ticket->linked)
+                                <option selected hidden value="{{ $ticket->linked->value('child_ticket') }}">Ticket #{{ $ticket->linked->value('child_ticket') }}</option>
+                            @endif
+
+                            <option value="{{ null }}" name="unassigned"> Unlink </option>
+
+                            @foreach ($tickets as $linkedTicket)
+                                <option value="{{ $linkedTicket->id }}">Ticket #{{ $linkedTicket->id }}</option>
                             @endforeach
                         </select>
                     </div>

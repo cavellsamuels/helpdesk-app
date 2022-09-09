@@ -13,11 +13,11 @@ class CommentTest extends TestCase
     use RefreshDatabase;
 
     protected AuthUser $user;
-    
+
     public function setUp(): void
     {
         parent::setUp();
-        
+
         $this->user = AuthUser::create(['first_name' => 'john', 'last_name' => 'doe', 'email' => 'test@test.com', 'password' => 'password', 'role_id' => 2]);
     }
     /** @test  */

@@ -41,12 +41,12 @@ class Ticket extends Model
         'assigned_to',
         'reporting_email',
     ];
-    
+
     protected $hidden = [
         'created_at',
         'updated_at',
     ];
-    
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_to');
@@ -56,12 +56,17 @@ class Ticket extends Model
     {
         return $this->hasOne(File::class, 'ticket_id');
     }
-    
+
     public function comment(): HasMany
     {
         return $this->hasMany(Comment::class, 'ticket_id');
     }
-    
+
+    public function linked(): HasMany
+    {
+        return $this->hasMany(Linked::class, 'parent_ticket');
+    }
+
     public function getCreatedAtFormattedAttribute()
     {
         return $this->created_at->format(config('app.date_format.front'));

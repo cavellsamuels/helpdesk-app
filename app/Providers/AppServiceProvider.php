@@ -27,8 +27,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Ticket::observe(TicketObserver::class);
 
-        view()->composer('*', function($view)
-        {
+        view()->composer('*', function ($view) {
             $view->with('itSupportUsers', \App\Models\User::where('role_id', 2)->get());
             $view->with('urgencies', \App\Models\Ticket::$urgencies);
             $view->with('categories', \App\Models\Ticket::$categories);

@@ -1,11 +1,13 @@
 <x-app-layout>
+
+    <title> Create Ticket </title>
+
     <div class="mt-2">
         <x-auth-card>
-            <title> Create Ticket </title>
             <form method="POST" action="{{ route('store.ticket') }}" enctype="multipart/form-data">
                 @csrf
 
-                <h2 class="text-white font-bold text-3xl pb-3 pt-2 underline"> Create Ticket </h2>
+                <x-heading2> Create Ticket </x-heading2>
 
                 <x-auth-validation-errors class="mb-3" :errors="$errors" />
 
@@ -13,8 +15,7 @@
                 <div class="mt-3">
                     <x-label for="title" :value="__('Title:')" />
 
-                    <x-input id="title" class="block mt-1 w-full" type="text" name="title" :value="old('title')"
-                        required autofocus />
+                    <x-input id="title" type="text" name="title" :value="old('title')" required autofocus />
                 </div>
 
                 <!-- Details -->
@@ -37,8 +38,7 @@
                 <div class="mt-3">
                     <x-label for="urgency" :value="__('Urgency Level:')" />
 
-                    <x-select name="urgency" id="urgency" :value="old('urgency')"
-                        required>
+                    <x-select name="urgency" id="urgency" :value="old('urgency')" required>
                         <option disabled selected value></option>
                         @foreach ($urgencies as $key => $value)
                             <option value="{{ $key }}"> {{ $value }}</option>
@@ -50,8 +50,7 @@
                 <div class="mt-3">
                     <x-label for="category" :value="__('Category:')" />
 
-                    <x-select name="category" id="category" name="category"
-                        :value="old('category')" required>
+                    <x-select name="category" id="category" name="category" :value="old('category')" required>
                         <option disabled selected value></option>
                         @foreach ($categories as $key => $value)
                             <option value="{{ $key }}"> {{ $value }}</option>
@@ -63,8 +62,7 @@
                 <div class="mt-3">
                     <x-label for="open" :value="__('Open:')" />
 
-                    <x-select name="open" id="open" :value="old('open')"
-                        required>
+                    <x-select name="open" id="open" :value="old('open')" required>
                         <option disabled selected value></option>
                         <option value="{{ App\Models\Ticket::OPEN }}">
                             Yes
@@ -82,15 +80,9 @@
                     <input type="file" id="file" class="block mt-1 w-full" name="file" />
                 </div>
 
-                <div class="flex items-center justify-end mt-3">
-                    <x-button class="ml-3">
-                        {{ __('Submit') }}
-                    </x-button>
-                </div>
-
                 @auth
                     <!-- Assigned To -->
-                    <div class="">
+                    <div class="mt-3">
                         <x-label for="assignedTo" :value="__('Assigned To:')" />
 
                         <x-select name="assigned_to" id="assigned_to" name="assigned_to">s
@@ -102,6 +94,12 @@
                         </x-select>
                     </div>
                 @endauth
+
+                <div class="flex items-center justify-end mt-3">
+                    <x-button class="ml-3">
+                        {{ __('Submit') }}
+                    </x-button>
+                </div>
             </form>
         </x-auth-card>
     </div>

@@ -17,12 +17,12 @@ class FileController extends Controller implements FileInterface
         return Storage::download($ticket->file->path, $ticket->file->name);
     }
 
-    public function store(Ticket $ticket, StoreTicketRequest $request, FileService $fileService) : void
+    public function store(StoreTicketRequest $request, Ticket $ticket,  FileService $fileService) : void
     {
         $fileService->createFile($ticket, $request);
     }   
 
-    public function update(Ticket $ticket, UpdateTicketRequest $request, FileService $fileService): void
+    public function update(UpdateTicketRequest $request, Ticket $ticket, FileService $fileService): void
     {
         $fileService->updateFile($ticket, $request);
     }

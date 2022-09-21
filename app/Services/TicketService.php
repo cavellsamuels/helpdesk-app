@@ -14,29 +14,28 @@ class TicketService
     public function createTicket(StoreTicketRequest $request, Ticket $ticket, FileController $fileController, FileService $fileService): void
     {
         $ticket = Ticket::query()->create($request->only(['title', 'details', 'urgency', 'category', 'open', 'logged_by', 'assigned_to']));
-        $fileController->store($ticket, $request, $fileService);
+        $fileController->store($request, $ticket, $fileService);
     }
 
     public function updateTicket(UpdateTicketRequest $request, Ticket $ticket, FileController $fileController, FileService $fileService): void
     {
         $ticket->update($request->only(['title', 'details', 'urgency', 'category', 'open', 'assigned_to']) + (['reporting_email' => now()]));
-        $fileController->update($ticket, $request, $fileService);
+        $fileController->update($request, $ticket, $fileService);
 
-        $getLinkedTicket = $request->get('linkticket'); // Get The Selected Ticket
+        $getLinkedTicket = $request->get('linkticket');
+        $parentTicket = Linked::where('parent_ticket', $ticket->id)->value('id');
+        $childTicket = Ticket::find($getLinkedTicket);
 
-        if ($getLinkedTicket) { //If a Ticket is Selected
-            if (count(Linked::where('parent_ticket', $ticket->id)->where('child_ticket', $getLinkedTicket)->get()) == 0) { // Check if Datavase already contains the link
-                $parentTicket = Linked::where('parent_ticket', $ticket->id)->value('id');
+        if ($getLinkedTicket) {
+            if (count(Linked::where('parent_ticket', $ticket->id)->where('child_ticket', $getLinkedTicket)->get()) == 0) {
                 if ($parentTicket) {
                     Linked::find($parentTicket)->delete();
                 }
-                Linked::create(['parent_ticket' => $ticket->id, 'child_ticket' => $getLinkedTicket]);  // if the link doesnt exist already create the link in the database
+                Linked::create(['parent_ticket' => $ticket->id, 'child_ticket' => $getLinkedTicket]);
             }
-            $childTicket = Ticket::find($getLinkedTicket); //find the Ticket which is equal to the selected ticket in the dropdown
             $childTicket->update($request->only(['title', 'details', 'urgency', 'category', 'open', 'assigned_to']) + (['reporting_email' => now()]));
-            $fileController->update($childTicket, $request, $fileService);
+            $fileController->update($request, $childTicket, $fileService);
         } elseif ($getLinkedTicket == null) {
-            $parentTicket = Linked::where('parent_ticket', $ticket->id)->value('id');
             if ($parentTicket) {
                 Linked::find($parentTicket)->delete();
             }

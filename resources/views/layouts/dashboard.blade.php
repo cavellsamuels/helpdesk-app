@@ -1,7 +1,7 @@
 <link href="{{ asset('css/assigned-dashboard.css') }}" rel="stylesheet">
 
 @section('search')
-    <form action="{{ route('search.ticket') }}" method="POST" role="search">
+    <form id="search" action="{{ route('search.ticket') }}" method="POST" role="search">
         @csrf
         @method('GET')
 
@@ -23,11 +23,11 @@
 
 @section('tableheaders')
     <tr>
-        @if (Route::is('show.global.dashboard'))
+        {{-- @if (Route::is('show.global.dashboard'))
             @auth
                 <th></th>
             @endauth
-        @endif
+        @endif --}}
         <th> Ticket # </th>
         <th> Title </th>
         <th> Urgency </th>
@@ -46,91 +46,95 @@
 @endsection
 
 @section('tablevalues')
-    <form id="linkedTickets" action="{{ route('show.linked', [$tickets->pluck('id')]) }}">
-        @foreach ($tickets as $ticket)
-            <tr>
-                @if (Route::is('show.global.dashboard'))
-                    @auth
-                        <td>
-                            <input type="checkbox" id="linkedtickets" name="linkedtickets[]"
-                                value="{{ $ticket->id }} 'active' => 'true'"></input>
-                        </td>
-                    @endauth
+    @foreach ($tickets as $ticket)
+        <tr>
+            {{-- @if (Route::is('show.global.dashboard'))
+                <form id="linkedTickets" action="{{ route('show.linked', [$tickets->pluck('id')]) }}">
+                @auth
+                    <td>
+                        <input type="checkbox" id="linkedtickets" name="linkedtickets[]"
+                            value="{{ $ticket->id }} 'active' => 'true'"></input>
+                    </td>
+                @endauth
+            @endif --}}
+            <td>{{ $ticket->id }}</td>
+            <td>{{ $ticket->title }}</td>
+            <td>
+                @foreach ($urgencies as $key => $value)
+                    @if ($key == $ticket->urgency)
+                        {{ $value }}
+                    @endif
+                @endforeach
+            </td>
+            <td>
+                @foreach ($categories as $key => $value)
+                    @if ($key == $ticket->category)
+                        {{ $value }}
+                    @endif
+                @endforeach
+            </td>
+            <td>
+                @if ($ticket->open == true)
+                    <div> &#x2705; Open </div>
                 @endif
-                <td>{{ $ticket->id }}</td>
-                <td>{{ $ticket->title }}</td>
-                <td>
-                    @foreach ($urgencies as $key => $value)
-                        @if ($key == $ticket->urgency)
-                            {{ $value }}
-                        @endif
-                    @endforeach
-                </td>
-                <td>
-                    @foreach ($categories as $key => $value)
-                        @if ($key == $ticket->category)
-                            {{ $value }}
-                        @endif
-                    @endforeach
-                </td>
-                <td>
-                    @if ($ticket->open == true)
-                        <div> &#x2705; Open </div>
-                    @endif
 
-                    @if ($ticket->open == false)
-                        <div> &#x274C; Closed </div>
-                    @endif
-                </td>
-                <td>
-                    @if ($ticket->file)
-                        {{ $ticket->file->name }}
-                    @endif
-                </td>
-                <td>{{ $ticket->created_at_formatted }}</td>
-                <td>{{ $ticket->logged_by }}</td>
-                @if (Route::is('show.global.dashboard'))
-                    @auth
-                        <td>
-                            @if ($ticket->user)
-                                {{ ucwords($ticket->user->first_name) }}
-                                {{ ucwords($ticket->user->last_name) }}
-                            @endif
-                        </td>
-                    @endauth
+                @if ($ticket->open == false)
+                    <div> &#x274C; Closed </div>
                 @endif
-                <td class="th-functions">
-                    <form id="deleteTicket" class="" action="{{ route('delete.ticket', [$ticket->id]) }}"
-                        method="POST">
-
-                        <a href="{{ route('show.ticket', $ticket->id) }}" id="showdetails" title="Ticket Details"
-                            class="ticket-details-button mb-1 p-1 bg-blue-900 rounded-md fa fa-info-circle"></a>
-
-                        <a href="{{ route('edit.ticket', $ticket->id) }}" id="editdetails" title="Edit Ticket"
-                            class="edit-ticket-button mb-1 p-1 bg-green-900 rounded-md text-xl fa fa-pencil">
-                        </a>
-
-                        @csrf
-                        @method('DELETE')
-
-                        @auth
-                            <button form="deleteTicket" title="Delete Ticket"
-                                class="delete-ticket-button bg-red-900 rounded-md p-1 fa fa-trash-o" type="submit">
-                            </button>
-                        @endauth
-                    </form>
-                </td>
-            </tr>
-        @endforeach
-        <div class="mb-4">
+            </td>
+            <td>
+                @if ($ticket->file)
+                    {{ $ticket->file->name }}
+                @endif
+            </td>
+            <td>{{ $ticket->created_at_formatted }}</td>
+            <td>{{ $ticket->logged_by }}</td>
             @if (Route::is('show.global.dashboard'))
                 @auth
-                    @method('GET')
-                    <x-button form="linkedTickets" title="Show Tickets" class="bg-blue-900 mt-2" name="viewtickets"> &#x1F441; </x-button>
-
-                    <x-button form="linkedTickets" title="Edit Tickets" name="edittickets" class="bg-green-900 mt-2"> &#128393; </x-button>
+                    <td>
+                        @if ($ticket->user)
+                            {{ ucwords($ticket->user->first_name) }}
+                            {{ ucwords($ticket->user->last_name) }}
+                        @endif
+                    </td>
                 @endauth
             @endif
-        </div>
-    </form>
+            <td class="th-functions">
+                <form id="deleteTicket" class="" action="{{ route('delete.ticket', [$ticket->id]) }}" method="POST">
+
+                    <a href="{{ route('show.ticket', $ticket->id) }}" id="showdetails" title="Ticket Details"
+                        class="ticket-details-button mb-1 p-1 bg-blue-900 rounded-md fa fa-info-circle"></a>
+
+                    <a href="{{ route('edit.ticket', $ticket->id) }}" id="editdetails" title="Edit Ticket"
+                        class="edit-ticket-button mb-1 p-1 bg-green-900 rounded-md text-xl fa fa-pencil">
+                    </a>
+
+                    @csrf
+                    @method('DELETE')
+
+                    @auth
+                        <button form="deleteTicket" title="Delete Ticket"
+                            class="delete-ticket-button bg-red-900 rounded-md p-1 fa fa-trash-o" type="submit">
+                        </button>
+                    @endauth
+                </form>
+            </td>
+        </tr>
+    @endforeach
+    {{-- Linked  ------------------- --}}
+    {{-- <div class="mb-4">
+        @if (Route::is('show.global.dashboard'))
+            @auth
+                @method('GET')
+                <x-button form="linkedTickets" title="Show Tickets" class="bg-blue-900 mt-2" name="viewtickets">
+                    &#x1F441;
+                </x-button>
+
+                <x-button form="linkedTickets" title="Edit Tickets" name="edittickets" class="bg-green-900 mt-2">
+                    &#128393;
+                </x-button>
+            @endauth
+        @endif
+    </div>
+    </form> --}}
 @endsection

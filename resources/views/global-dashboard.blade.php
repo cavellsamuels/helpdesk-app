@@ -19,8 +19,6 @@
 
                 @yield('tablevalues')
             </table>
-
-            {{-- @yield('linked') --}}
         </div>
     </body>
 </x-app-layout>

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('linkeds', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('parent_ticket')->references('id')->on('tickets');
+            $table->foreignId('parent_ticket')->references('id')->on('tickets');    
             $table->foreignId('child_ticket')->references('id')->on('tickets');
             $table->timestamps();
         });

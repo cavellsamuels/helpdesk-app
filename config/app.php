@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Auth\Access\Gate;
 use Illuminate\Support\Facades\Facade;
 
 return [
@@ -215,5 +214,5 @@ return [
 
     'date_format' => [
         'front' => 'd/m/Y',
-    ]
+    ],
 ];

@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ticket;
-use Illuminate\View\View;
-use App\Services\FileService;
-use App\Services\TicketService;
-use App\Interfaces\TicketInterface;
-use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
+use App\Interfaces\TicketInterface;
 use App\Interfaces\TicketRepositoryInterface;
+use App\Models\Ticket;
+use App\Services\FileService;
+use App\Services\TicketService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class TicketController extends Controller implements TicketInterface
 {
@@ -20,6 +20,7 @@ class TicketController extends Controller implements TicketInterface
     {
         $this->ticketRepository = $ticketRepository;
     }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -33,20 +34,22 @@ class TicketController extends Controller implements TicketInterface
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreTicketRequest  $request
+     * @param \App\Http\Requests\StoreTicketRequest $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(StoreTicketRequest $request, TicketService $ticketService, Ticket $ticket, FileController $fileController, FileService $fileService): RedirectResponse
     {
         $ticketService->createTicket($request, $ticket, $fileController, $fileService);
-        
+
         return redirect()->route('show.global.dashboard')->with('success', 'Ticket Added Successfully');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Ticket  $ticket
+     * @param \App\Models\Ticket $ticket
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(Ticket $ticket): View
@@ -59,7 +62,8 @@ class TicketController extends Controller implements TicketInterface
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Ticket  $ticket
+     * @param \App\Models\Ticket $ticket
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit(Ticket $ticket): View
@@ -68,12 +72,13 @@ class TicketController extends Controller implements TicketInterface
 
         return view('tickets.edit', compact('ticket', 'tickets'));
     }
-    
+
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateTicketRequest  $request
-     * @param  \App\Models\Ticket  $ticketlinked.
+     * @param \App\Http\Requests\UpdateTicketRequest $request
+     * @param \App\Models\Ticket                     $ticketlinked.
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateTicketRequest $request, TicketService $ticketService, Ticket $ticket, FileController $fileController, FileService $fileService): RedirectResponse
@@ -86,7 +91,8 @@ class TicketController extends Controller implements TicketInterface
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Ticket  $ticket
+     * @param \App\Models\Ticket $ticket
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(TicketService $ticketService, Ticket $ticket): RedirectResponse

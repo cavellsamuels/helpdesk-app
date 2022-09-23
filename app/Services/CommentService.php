@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\Ticket;
-use App\Models\Comment;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CommentRequest;
+use App\Models\Comment;
+use App\Models\Ticket;
+use Illuminate\Support\Facades\Auth;
 
 class CommentService
 {

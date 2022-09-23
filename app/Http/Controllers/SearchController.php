@@ -13,6 +13,7 @@ class SearchController extends Controller
     {
         $this->searchRepository = $searchRepository;
     }
+
     public function __invoke(SearchRequest $request)
     {
         $tickets = $this->searchRepository->getTickets($request);

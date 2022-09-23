@@ -1,14 +1,14 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\FileController;
-use App\Http\Controllers\TicketController;
-use App\Http\Controllers\SearchController;
-use App\Http\Controllers\CommentController;
 use App\Http\Controllers\AllTicketsController;
-use App\Http\Controllers\LinkedTicketsController;
 use App\Http\Controllers\AssignedTicketContrroller;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\FileController;
+use App\Http\Controllers\LinkedTicketsController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UnassignedTicketContrroller;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +23,7 @@ use App\Http\Controllers\UnassignedTicketContrroller;
 
 Route::get('/', AllTicketsController::class)->name('show.global.dashboard');
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
 
 Route::middleware('auth')->group(function () {
     Route::get('/search', SearchController::class)->name('search.ticket');

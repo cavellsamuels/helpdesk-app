@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use App\Models\Ticket;
 use App\Models\Comment;
+use App\Models\Ticket;
 use Illuminate\Foundation\Auth\User as AuthUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class CommentTest extends TestCase
 {
@@ -20,11 +20,12 @@ class CommentTest extends TestCase
 
         $this->user = AuthUser::create(['first_name' => 'john', 'last_name' => 'doe', 'email' => 'test@test.com', 'password' => 'password', 'role_id' => 2]);
     }
+
     /** @test  */
     public function check_if_a_comment_can_be_added_by_a_guest()
     {
         $ticket = Ticket::factory()->create(['id' => 1]);
-        $comment =  Comment::factory()->create();
+        $comment = Comment::factory()->create();
 
         $this->actingAs($this->user)->post(
             "comments/{$ticket->id}/store",

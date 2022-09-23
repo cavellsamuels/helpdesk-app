@@ -2,10 +2,10 @@
 
 namespace App\Repositories;
 
-use App\Models\Ticket;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Collection;
 use App\Interfaces\AssignedTicketRepositoryInterface;
+use App\Models\Ticket;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class AssignedTicketRepository implements AssignedTicketRepositoryInterface
 {

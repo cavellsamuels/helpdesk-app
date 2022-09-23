@@ -2,23 +2,22 @@
 
 namespace App\Services;
 
+use App\Http\Requests\StoreTicketRequest;
+use App\Http\Requests\UpdateTicketRequest;
 use App\Models\File;
 use App\Models\Ticket;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Requests\StoreTicketRequest;
-use App\Http\Requests\UpdateTicketRequest;
 
 class FileService
 {
-
     public function createFile(Ticket $ticket, StoreTicketRequest $request): void
     {
         if ($request->hasfile('file')) {
             $request->file('file')->store('public/files');
             File::query()->create([
-                'name' => $request->file('file')->getClientOriginalName(),
-                'path' => $request->file('file')->getRealPath(),
-                'size' => $request->file('file')->getSize(),
+                'name'      => $request->file('file')->getClientOriginalName(),
+                'path'      => $request->file('file')->getRealPath(),
+                'size'      => $request->file('file')->getSize(),
                 'ticket_id' => $ticket->id,
             ]);
         }
@@ -40,9 +39,9 @@ class FileService
             } else {
                 $request->file('file')->store('public/files');
                 File::query()->create([
-                    'name' => $request->file('file')->getClientOriginalName(),
-                    'path' => $request->file('file')->store('public/files'),
-                    'size' => $request->file('file')->getSize(),
+                    'name'      => $request->file('file')->getClientOriginalName(),
+                    'path'      => $request->file('file')->store('public/files'),
+                    'size'      => $request->file('file')->getSize(),
                     'ticket_id' => $ticket->id,
                 ]);
             }

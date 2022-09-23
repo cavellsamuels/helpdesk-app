@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
 use App\Models\Ticket;
 use Illuminate\Foundation\Auth\User as AuthUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class TicketTest extends TestCase
 {
@@ -45,12 +45,12 @@ class TicketTest extends TestCase
         $this->post(
             'tickets/store',
             [
-                'title' => $ticket->title,
-                'details' => $ticket->details,
+                'title'     => $ticket->title,
+                'details'   => $ticket->details,
                 'logged_by' => $ticket->logged_by,
-                'urgency' => $ticket->urgency,
-                'category' => $ticket->category,
-                'open' => $ticket->open,
+                'urgency'   => $ticket->urgency,
+                'category'  => $ticket->category,
+                'open'      => $ticket->open,
             ]
         )->assertValid();
 
@@ -65,12 +65,12 @@ class TicketTest extends TestCase
         $this->actingAs($this->user)->post(
             'tickets/store',
             [
-                'title' => $ticket->title,
-                'details' => $ticket->details,
-                'logged_by' => $ticket->logged_by,
-                'urgency' => $ticket->urgency,
-                'category' => $ticket->category,
-                'open' => $ticket->open,
+                'title'       => $ticket->title,
+                'details'     => $ticket->details,
+                'logged_by'   => $ticket->logged_by,
+                'urgency'     => $ticket->urgency,
+                'category'    => $ticket->category,
+                'open'        => $ticket->open,
                 'assigned_to' => $ticket->open,
             ]
         )->assertValid();
@@ -94,13 +94,13 @@ class TicketTest extends TestCase
         $this->put(
             "tickets/{$ticket->id}/update",
             [
-                'title' => 'hello',
+                'title'   => 'hello',
                 'urgency' => 2,
             ]
         );
         $this->get(route('show.global.dashboard'))
             ->assertOk()
-            ->assertSee("hello");
+            ->assertSee('hello');
     }
 
     /** @test  */
@@ -124,8 +124,6 @@ class TicketTest extends TestCase
     //     $search = 1;
 
     //     //get the model inputted in search
-
-        
 
     //     $$this->get(route('search.ticket'))->assertStatus(302)
     //         ->assertSee('Login Issue');

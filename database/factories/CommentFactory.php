@@ -19,8 +19,8 @@ class CommentFactory extends Factory
     public function definition()
     {
         return [
-            'details' => $this->faker->sentence(),
-            'ticket_id' => Ticket::factory(),
+            'details'    => $this->faker->sentence(),
+            'ticket_id'  => Ticket::factory(),
             'created_by' => User::factory(),
         ];
     }

@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ticket;
-use App\Models\Comment;
-use Illuminate\View\View;
-use App\Services\CommentService;
-use App\Interfaces\CommentInterface;
 use App\Http\Requests\CommentRequest;
+use App\Interfaces\CommentInterface;
+use App\Models\Comment;
+use App\Models\Ticket;
+use App\Services\CommentService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class CommentController extends Controller implements CommentInterface
 {
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\CommentRequest  $request
+     * @param \App\Http\Requests\CommentRequest $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(CommentService $commentService, CommentRequest $request, Ticket $ticket): RedirectResponse
@@ -28,7 +29,8 @@ class CommentController extends Controller implements CommentInterface
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Comment  $comment
+     * @param \App\Models\Comment $comment
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit(Ticket $ticket, Comment $comment): View
@@ -39,8 +41,9 @@ class CommentController extends Controller implements CommentInterface
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\CommentRequest  $request
-     * @param  \App\Models\Comment  $comment
+     * @param \App\Http\Requests\CommentRequest $request
+     * @param \App\Models\Comment               $comment
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(CommentRequest $request, Ticket $ticket, Comment $comment): RedirectResponse
@@ -53,7 +56,8 @@ class CommentController extends Controller implements CommentInterface
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Comment  $comment
+     * @param \App\Models\Comment $comment
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Ticket $ticket, Comment $comment): RedirectResponse

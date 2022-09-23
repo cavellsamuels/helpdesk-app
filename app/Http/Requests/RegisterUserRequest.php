@@ -26,10 +26,10 @@ class RegisterUserRequest extends FormRequest
     {
         return [
             'first_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z]+$/u'],
-            'last_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z]+$/u'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed', Password::defaults()],
-            'role_id' => []
+            'last_name'  => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z]+$/u'],
+            'email'      => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password'   => ['required', 'confirmed', Password::defaults()],
+            'role_id'    => [],
         ];
     }
 
@@ -37,10 +37,10 @@ class RegisterUserRequest extends FormRequest
     {
         $this->merge([
             'first_name' => $this->first_name,
-            'last_name' => $this->last_name,
-            'email' => $this->email,
-            'password' => $this->password,
-            'role_id' => $this->role_id
+            'last_name'  => $this->last_name,
+            'email'      => $this->email,
+            'password'   => $this->password,
+            'role_id'    => $this->role_id,
         ]);
     }
 }

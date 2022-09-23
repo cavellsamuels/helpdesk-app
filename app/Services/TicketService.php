@@ -2,12 +2,12 @@
 
 namespace App\Services;
 
-use App\Models\Ticket;
-use App\Models\Linked;
-use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\FileController;
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
+use App\Models\Linked;
+use App\Models\Ticket;
+use Illuminate\Support\Facades\Storage;
 
 class TicketService
 {

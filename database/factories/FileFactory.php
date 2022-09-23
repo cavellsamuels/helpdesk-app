@@ -21,9 +21,9 @@ class FileFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->fileExtension(),
-            'path' => $this->faker->filePath(),
-            'size' => $this->faker->randomNumber(),
+            'name'      => $this->faker->fileExtension(),
+            'path'      => $this->faker->filePath(),
+            'size'      => $this->faker->randomNumber(),
             'ticket_id' => Ticket::factory(),
         ];
     }

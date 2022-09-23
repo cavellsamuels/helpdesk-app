@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\View\View;
 use App\Interfaces\AssignedTicketRepositoryInterface;
+use Illuminate\View\View;
 
 class AssignedTicketContrroller extends Controller
 {
     protected AssignedTicketRepositoryInterface $assignedTicketRepository;
 
     public function __construct(AssignedTicketRepositoryInterface $assignedTicketRepository)
-    {   
+    {
         $this->assignedTicketRepository = $assignedTicketRepository;
     }
 

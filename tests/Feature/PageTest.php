@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use Tests\TestCase;
-use App\Models\User;
 use App\Models\Ticket;
+use App\Models\User;
 use Illuminate\Foundation\Auth\User as AuthUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class PageTest extends TestCase
 {
@@ -48,7 +48,7 @@ class PageTest extends TestCase
         Ticket::factory()->create(['title' => 'Desktop Error', 'assigned_to' => null]);
 
         $this->post('/login', [
-            'email' => $user->email,
+            'email'    => $user->email,
             'password' => 'password',
         ]);
 

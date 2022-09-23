@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Contracts\View\View;
 use App\Interfaces\AssignedTicketRepositoryInterface;
+use Illuminate\Contracts\View\View;
 
 class AllTicketsController extends Controller
 {
